@@ -9,7 +9,7 @@ public class IdentityPlatformController {
 
     @GetMapping("/greeting")
     public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return "deployment testing";
+        return "deployment testing1" + name;
     }
 
 }
