@@ -34,4 +34,4 @@ build/
 .vscode/
 
 ### Credentials ###
-src/main/java/com/example/telpback/telpServiceAccount.json
+telpServiceAccount.json
