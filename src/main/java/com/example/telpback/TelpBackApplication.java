@@ -13,10 +13,11 @@ import java.io.FileInputStream;
 public class TelpBackApplication {
     public static void main(String[] args) {
         try {
-            FileInputStream serviceAccount = new FileInputStream("telpServiceAccount.json");
-
+            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
+            System.out.println(credentials);
             FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(credentials)
+                    .setProjectId("telp-445718")
                     .build();
 
             FirebaseApp.initializeApp(options);
