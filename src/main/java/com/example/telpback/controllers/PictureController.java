@@ -12,7 +12,7 @@ public class PictureController {
     @GetMapping("/pictures/{id}")
     @ResponseBody
     public Picture getSinglePictureDocument(@PathVariable String id) {
-        PictureService pictureService = new PictureService("pictures");
+        PictureService pictureService = new PictureService();
         Picture pictureDocument;
 
         try {
