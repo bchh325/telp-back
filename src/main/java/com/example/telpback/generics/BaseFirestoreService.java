@@ -1,19 +1,19 @@
 package com.example.telpback.generics;
 
+import com.example.telpback.exceptions.DocumentNotFoundException;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 
 import java.util.List;
 
 public class BaseFirestoreService<T> {
     private static Firestore db;
-    private final String collectionName;
+    private CollectionReference ref;
+    private final Class<T> type;
 
-    public BaseFirestoreService(String collectionName) {
-        this.collectionName = collectionName;
+    public BaseFirestoreService(String collectionName, Class<T> type) {
+        this.type = type;
         if (db == null) {
             synchronized (BaseFirestoreService.class) {
                 if (db == null) {
@@ -21,22 +21,22 @@ public class BaseFirestoreService<T> {
                 }
             }
         }
+
+        if (db != null) {
+            this.ref = db.collection(collectionName);
+        }
     }
 
-    public void getDocuments(String collection_name) {
-        try {
-            ApiFuture<QuerySnapshot> query = db.collection("users").get();
-            QuerySnapshot snapshot = query.get();
-            List<QueryDocumentSnapshot> documents = snapshot.getDocuments();
+    public T getSingleDocumentByName(String documentId) throws Exception {
+        DocumentReference docRef = this.ref.document(documentId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot singleDocument = future.get();
 
-            for (QueryDocumentSnapshot document : documents) {
-                System.out.println("Document ID: " + document.getId());
-                System.out.println("Data: " + document.getData());
-                System.out.println("--------------------");
-            }
-
-        } catch (Exception e) {
-            System.out.println("Exception: " + e);
+        if (singleDocument.exists()) {
+            System.out.println(singleDocument.getData());
+            return singleDocument.toObject(this.type);
+        } else {
+            throw new DocumentNotFoundException("There was an error retrieving the selected document.");
         }
     }
 }
