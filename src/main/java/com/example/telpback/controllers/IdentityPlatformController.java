@@ -1,6 +1,5 @@
 package com.example.telpback.controllers;
 
-import com.example.telpback.services.FirestoreService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,10 +35,6 @@ public class IdentityPlatformController {
 
     @GetMapping("/get-documents")
     public String getDocuments(@RequestParam(value = "name", defaultValue = "World") String name) {
-        FirestoreService firestoreService = new FirestoreService();
-        firestoreService.getDocuments();
-
-
         return "Document";
     }
 

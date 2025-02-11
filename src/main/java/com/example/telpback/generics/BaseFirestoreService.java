@@ -1,21 +1,21 @@
-package com.example.telpback.services;
+package com.example.telpback.generics;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.cloud.FirestoreClient;
 
 import java.util.List;
 
-public class FirestoreService {
+public class BaseFirestoreService<T> {
     private static Firestore db;
+    private final String collectionName;
 
-    public FirestoreService() {
+    public BaseFirestoreService(String collectionName) {
+        this.collectionName = collectionName;
         if (db == null) {
-            synchronized (FirestoreService.class) {
+            synchronized (BaseFirestoreService.class) {
                 if (db == null) {
                     db = FirestoreClient.getFirestore();
                 }
@@ -23,7 +23,7 @@ public class FirestoreService {
         }
     }
 
-    public void getDocuments() {
+    public void getDocuments(String collection_name) {
         try {
             ApiFuture<QuerySnapshot> query = db.collection("users").get();
             QuerySnapshot snapshot = query.get();
@@ -39,5 +39,4 @@ public class FirestoreService {
             System.out.println("Exception: " + e);
         }
     }
-
 }
