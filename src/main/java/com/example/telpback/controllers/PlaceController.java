@@ -1,19 +1,17 @@
 package com.example.telpback.controllers;
-import com.example.telpback.models.Picture;
+import com.example.telpback.generics.BaseUpdateClass;
 import com.example.telpback.models.Place;
-import com.example.telpback.services.PictureService;
 import com.example.telpback.services.PlaceService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/places")
 public class PlaceController {
-    @GetMapping("/places/{id}")
+    PlaceService placeService = new PlaceService("places");
+
+    @GetMapping("/{id}")
     @ResponseBody
     public Place getSinglePlaceDocument(@PathVariable String id) {
-        PlaceService placeService = new PlaceService("places");
         Place placeDocument;
 
         try {
@@ -25,5 +23,14 @@ public class PlaceController {
         }
 
         return new Place();
+    }
+
+    @PostMapping("/update")
+    public void updatePlace(@RequestBody BaseUpdateClass<Place> body) {
+        try {
+            placeService.updateDocument(body.getObject(), body.getDocumentId());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 }

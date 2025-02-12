@@ -5,7 +5,10 @@ import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BaseFirestoreService<T> {
     private static Firestore db;
@@ -37,6 +40,43 @@ public class BaseFirestoreService<T> {
             return singleDocument.toObject(this.type);
         } else {
             throw new DocumentNotFoundException("There was an error retrieving the selected document.");
+        }
+    }
+
+    //Creates document with auto-generated documentId. Use setDocument() if you want to specify a custom id.
+    public void addDocument(T pojo) throws Exception {
+        try {
+            this.ref.document().set(pojo);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void setDocument(T pojo, String documentId) throws Exception {
+        try {
+            this.ref.document(documentId).set(pojo);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void updateDocument(T pojoUpdateObject, String documentId) {
+        Field[] fields = pojoUpdateObject.getClass().getDeclaredFields();
+        Map<String, Object> updateMap = new HashMap<>();
+
+        try {
+            for (Field field: fields) {
+                field.setAccessible(true);
+
+                if (field.get(pojoUpdateObject) != null) {
+                    updateMap.put(field.getName(), field.get(pojoUpdateObject));
+                }
+            }
+
+            this.ref.document(documentId).update(updateMap);
+
+        } catch (Exception e) {
+            System.out.println("Exception has occurred: " + e);
         }
     }
 }

@@ -31,4 +31,13 @@ public class User {
     public void setVisited_places(List<Object> visited_places) {
         this.visited_places = visited_places;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "liked_places=" + liked_places +
+                ", uploaded_pictures=" + uploaded_pictures +
+                ", visited_places=" + visited_places +
+                '}';
+    }
 }

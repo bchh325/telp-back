@@ -3,9 +3,9 @@ package com.example.telpback.models;
 public class Place {
 
     private String image_url;
-    private int like_amount;
+    private Integer like_amount;
     private String location;
-    private int visit_amount;
+    private Integer visit_amount;
 
     public String getImage_url() {
         return image_url;
@@ -37,5 +37,15 @@ public class Place {
 
     public void setVisit_amount(int visit_amount) {
         this.visit_amount = visit_amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "image_url='" + image_url + '\'' +
+                ", like_amount=" + like_amount +
+                ", location='" + location + '\'' +
+                ", visit_amount=" + visit_amount +
+                '}';
     }
 }
