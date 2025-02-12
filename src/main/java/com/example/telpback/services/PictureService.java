@@ -7,4 +7,8 @@ public class PictureService extends BaseFirestoreService<Picture> {
     public PictureService(String collectionName) {
         super(collectionName, Picture.class);
     }
+
+    public static void uploadObject() {
+
+    }
 }

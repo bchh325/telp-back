@@ -1,6 +1,6 @@
 package com.example.telpback.generics;
 
-public class BaseUpdateClass<T> {
+public class BaseDocumentUpdate<T> {
     private String documentId;
     private T object;
 

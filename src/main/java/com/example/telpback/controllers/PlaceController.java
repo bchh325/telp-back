@@ -1,5 +1,5 @@
 package com.example.telpback.controllers;
-import com.example.telpback.generics.BaseUpdateClass;
+import com.example.telpback.generics.BaseDocumentUpdate;
 import com.example.telpback.models.Place;
 import com.example.telpback.services.PlaceService;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +26,7 @@ public class PlaceController {
     }
 
     @PostMapping("/update")
-    public void updatePlace(@RequestBody BaseUpdateClass<Place> body) {
+    public void updatePlace(@RequestBody BaseDocumentUpdate<Place> body) {
         try {
             placeService.updateDocument(body.getObject(), body.getDocumentId());
         } catch (Exception e) {
