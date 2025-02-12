@@ -2,17 +2,16 @@ package com.example.telpback.controllers;
 
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/pictures")
 public class PictureController {
-    @GetMapping("/pictures/{id}")
+    PictureService pictureService = new PictureService("pictures", "telp-photos");
+
+    @GetMapping("/{id}")
     @ResponseBody
     public Picture getSinglePictureDocument(@PathVariable String id) {
-        PictureService pictureService = new PictureService("pictures");
         Picture pictureDocument;
 
         try {
@@ -24,5 +23,11 @@ public class PictureController {
         }
 
         return new Picture();
+    }
+
+    @PostMapping("/upload")
+    public void uploadPicture() {
+        System.out.println("uploading picture");
+        pictureService.upload("ObjectName", "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
     }
 }
