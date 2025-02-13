@@ -28,6 +28,12 @@ public class PictureController {
     @PostMapping("/upload")
     public void uploadPicture() {
         System.out.println("uploading picture");
-        pictureService.upload("ObjectName", "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
+        pictureService.upload("testimagecache.jpg", "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
+    }
+
+    @GetMapping("/get")
+    public void getPicture() {
+        System.out.println("getting picture url");
+        pictureService.getPicture();
     }
 }

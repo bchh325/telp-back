@@ -29,4 +29,8 @@ public class PictureService {
     public void upload(String uniqueObjectName, String filePath) {
         uploadService.upload(uniqueObjectName, filePath);
     }
+
+    public void getPicture() {
+        uploadService.getPicture();
+    }
 }
