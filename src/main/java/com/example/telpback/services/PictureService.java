@@ -3,6 +3,7 @@ package com.example.telpback.services;
 import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.generics.BaseUploadService;
 import com.example.telpback.models.Picture;
+import org.springframework.web.multipart.MultipartFile;
 
 public class PictureService {
     private BaseFirestoreService<Picture> firestoreService;
@@ -26,8 +27,9 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(String uniqueObjectName, String filePath) {
-        uploadService.upload(uniqueObjectName, filePath);
+    public void upload(String pictureUuid, MultipartFile file, Picture pictureObject) {
+       uploadService.uploadToBucket(pictureUuid, file);
+       firestoreService.setDocument(pictureUuid, pictureObject);
     }
 
     public void getPicture() {

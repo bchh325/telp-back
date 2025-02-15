@@ -40,11 +40,26 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void setDocument(T documentObject) throws Exception {
-        System.out.println("Setting document");
+    public void setDocument(String documentId, T documentObject) {
+        try {
+            ref.document(documentId).set(documentObject);
+        } catch (Exception e) {
+            System.out.println("Error setting document");
+            System.out.println(e);
+        }
     }
 
-    public void updateDocument(T documentObject) throws Exception {
+    public void addDocument(T documentObject) {
+        try {
+            ref.add(documentObject);
+        } catch (Exception e) {
+            System.out.println("Error adding document");
+            System.out.println(e);
+        }
+    }
+
+    public void updateDocument(T documentObject) {
         System.out.println("Setting document");
+        //Requires more specific implementation
     }
 }

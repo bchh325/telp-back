@@ -4,6 +4,7 @@ import com.example.telpback.models.Picture;
 import com.example.telpback.models.Place;
 import com.example.telpback.services.PictureService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -29,11 +30,16 @@ public class PictureController {
     }
 
     @PostMapping("/upload")
-    public void uploadPicture(@RequestBody Picture picture) {
-        UUID uuid = UUID.randomUUID();
+    public void uploadPicture(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("placeId") String placeId
+    ) {
+        String pictureUuid = UUID.randomUUID().toString();
+
+        Picture pictureObject = new Picture(placeId);
 
         System.out.println("uploading picture");
-        pictureService.upload(uuid.toString(), "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
+        pictureService.upload(pictureUuid, file, pictureObject);
     }
 
     @GetMapping("/get")

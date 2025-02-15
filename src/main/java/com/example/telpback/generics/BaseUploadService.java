@@ -4,6 +4,7 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.desktop.SystemSleepEvent;
 import java.net.URL;
@@ -21,13 +22,13 @@ public class BaseUploadService<T> {
         storage = StorageOptions.getDefaultInstance().getService();
     }
 
-    public void upload(String uniqueObjectName, String filePath) {
-        blobId = BlobId.of(this.bucketName, uniqueObjectName);
+    public void uploadToBucket(String uniqueObjectId, MultipartFile file) {
+        blobId = BlobId.of(this.bucketName, uniqueObjectId);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType("image/jpeg")
                 .build();
         try {
-            storage.createFrom(blobInfo, Paths.get(filePath));
+            storage.create(blobInfo, file.getBytes());
         } catch (Exception e) {
             System.out.println(e);
         }
