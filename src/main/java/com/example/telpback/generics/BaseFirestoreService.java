@@ -27,6 +27,14 @@ public class BaseFirestoreService<T> {
         }
     }
 
+    public CollectionReference getRef() {
+        return ref;
+    }
+
+    public void setRef(CollectionReference ref) {
+        this.ref = ref;
+    }
+
     public T getSingleDocumentByName(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
