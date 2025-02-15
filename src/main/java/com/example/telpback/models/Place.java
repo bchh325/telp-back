@@ -2,25 +2,25 @@ package com.example.telpback.models;
 
 public class Place {
 
-    private String image_url;
-    private Integer like_amount;
+    private String imageUrl;
+    private Integer likeAmount;
     private String location;
-    private Integer visit_amount;
+    private Integer visitAmount;
 
-    public String getImage_url() {
-        return image_url;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImage_url(String image_url) {
-        this.image_url = image_url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public int getLike_amount() {
-        return like_amount;
+    public Integer getLikeAmount() {
+        return likeAmount;
     }
 
-    public void setLike_amount(int like_amount) {
-        this.like_amount = like_amount;
+    public void setLikeAmount(Integer likeAmount) {
+        this.likeAmount = likeAmount;
     }
 
     public String getLocation() {
@@ -31,21 +31,21 @@ public class Place {
         this.location = location;
     }
 
-    public int getVisit_amount() {
-        return visit_amount;
+    public Integer getVisitAmount() {
+        return visitAmount;
     }
 
-    public void setVisit_amount(int visit_amount) {
-        this.visit_amount = visit_amount;
+    public void setVisitAmount(Integer visitAmount) {
+        this.visitAmount = visitAmount;
     }
 
     @Override
     public String toString() {
         return "Place{" +
-                "image_url='" + image_url + '\'' +
-                ", like_amount=" + like_amount +
+                "imageUrl='" + imageUrl + '\'' +
+                ", likeAmount=" + likeAmount +
                 ", location='" + location + '\'' +
-                ", visit_amount=" + visit_amount +
+                ", visitAmount=" + visitAmount +
                 '}';
     }
 }

@@ -10,10 +10,10 @@ public class PlaceService extends BaseFirestoreService<Place> {
 
     public void incrementLikeAmount(String placeId) {
         try {
-            int currentLikes = super.getSingleDocumentByName(placeId).getLike_amount();
+            int currentLikes = super.getSingleDocumentByName(placeId).getLikeAmount();
             Place placeUpdate = new Place();
 
-            placeUpdate.setLike_amount(currentLikes + 1);
+            placeUpdate.setLikeAmount(currentLikes + 1);
 
             super.updateDocument(placeUpdate, placeId);
         } catch (Exception e) {
@@ -23,10 +23,10 @@ public class PlaceService extends BaseFirestoreService<Place> {
 
     public void decrementLikeAmount(String placeId) {
         try {
-            int currentLikes = super.getSingleDocumentByName(placeId).getLike_amount();
+            int currentLikes = super.getSingleDocumentByName(placeId).getLikeAmount();
             Place placeUpdate = new Place();
 
-            placeUpdate.setLike_amount(currentLikes - 1);
+            placeUpdate.setLikeAmount(currentLikes - 1);
 
             super.updateDocument(placeUpdate, placeId);
         } catch (Exception e) {
