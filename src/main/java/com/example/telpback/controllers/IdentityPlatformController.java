@@ -1,10 +1,10 @@
 package com.example.telpback.controllers;
 
+import com.example.telpback.models.User;
+import com.example.telpback.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClient;
 
 @RestController
@@ -31,11 +31,6 @@ public class IdentityPlatformController {
 
 
         return result.getBody();
-    }
-
-    @GetMapping("/get-documents")
-    public String getDocuments(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return "Document";
     }
 
 }
