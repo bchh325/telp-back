@@ -39,4 +39,12 @@ public class BaseFirestoreService<T> {
             throw new DocumentNotFoundException("There was an error retrieving the selected document.");
         }
     }
+
+    public void setDocument(T documentObject) throws Exception {
+        System.out.println("Setting document");
+    }
+
+    public void updateDocument(T documentObject) throws Exception {
+        System.out.println("Setting document");
+    }
 }

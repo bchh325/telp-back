@@ -1,8 +1,11 @@
 package com.example.telpback.controllers;
 
 import com.example.telpback.models.Picture;
+import com.example.telpback.models.Place;
 import com.example.telpback.services.PictureService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/pictures")
@@ -26,14 +29,21 @@ public class PictureController {
     }
 
     @PostMapping("/upload")
-    public void uploadPicture() {
+    public void uploadPicture(@RequestBody Picture picture) {
+        UUID uuid = UUID.randomUUID();
+
         System.out.println("uploading picture");
-        pictureService.upload("testimagecache.jpg", "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
+        pictureService.upload(uuid.toString(), "/Users/bryan/Documents/telp-front/assets/images/background.jpg");
     }
 
     @GetMapping("/get")
     public void getPicture() {
         System.out.println("getting picture url");
         pictureService.getPicture();
+    }
+
+    @GetMapping("/paginate")
+    public Place[] getPaginatedPicturesStartingFrom(String startKey, int amount) {
+        return new Place[]{};
     }
 }

@@ -33,4 +33,8 @@ public class PictureService {
     public void getPicture() {
         uploadService.getPicture();
     }
+
+    public void paginate(String startKey) {
+
+    }
 }
