@@ -46,18 +46,18 @@ public class PictureService {
         uploadService.getPicture();
     }
 
-    public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
-        DocumentSnapshot lastDocumentInSnapshot = null;
+    public PaginationResponse refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
+        DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "http://35.244.209.96";
         List<URL> urls = new ArrayList<>();
 
         try {
-            Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize);
+            Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize, true);
 
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
             QuerySnapshot snapshot = querySnapshot.get();
 
-            lastDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
+            newestDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
 
             for (DocumentSnapshot doc : snapshot) {
                 URL constructuedUrl = new URL(resourceOriginUrl + "/" + doc.getId());
@@ -70,28 +70,63 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, lastDocumentInSnapshot.getId());
+        return new PaginationResponse(urls, null, newestDocumentInSnapshot.getId());
+    }
+    public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
+        DocumentSnapshot oldestDocumentInSnapshot = null;
+        DocumentSnapshot newestDocumentInSnapshot = null;
+        String resourceOriginUrl = "http://35.244.209.96";
+        List<URL> urls = new ArrayList<>();
+
+        try {
+            Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize, false);
+
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            QuerySnapshot snapshot = querySnapshot.get();
+
+            oldestDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
+            newestDocumentInSnapshot = snapshot.getDocuments().get(0);
+
+
+            for (DocumentSnapshot doc : snapshot) {
+                URL constructuedUrl = new URL(resourceOriginUrl + "/" + doc.getId());
+                System.out.println(constructuedUrl);
+                urls.add(constructuedUrl);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        System.out.println("end pagination");
+        return new PaginationResponse(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
     }
 
-    private Query buildPaginationQuery(String documentIdStartKey, String placeId, int querySize) {
+    private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {
         CollectionReference collectionReference = this.firestoreService.getRef();
         DocumentSnapshot emptySnapshot = null;
 
         Query query = collectionReference
-                .whereEqualTo("placeId", placeId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .limit(querySize);
+                .whereEqualTo("placeId", placeId);
 
-        if (documentIdStartKey.isBlank()) {
-            return query;
+        if (isRefresh) {
+            query = query.orderBy("timestamp", Query.Direction.ASCENDING);
+        } else {
+            query = query.orderBy("timestamp", Query.Direction.DESCENDING);
+        }
+
+        if (documentIdKeyCursor.isBlank()) {
+            return query.limit(querySize);
         }
 
         try {
-            DocumentSnapshot startKey = this.firestoreService.getSingleDocumentById(documentIdStartKey);
-            return query.startAfter(startKey);
+            DocumentSnapshot startKey = this.firestoreService.getSingleDocumentById(documentIdKeyCursor);
+            query = query.startAfter(startKey);
         } catch (Exception e) {
             System.out.println(e);
-            return query.startAfter(emptySnapshot);
+            query = query.startAfter(emptySnapshot);
         }
+
+        return query.limit(querySize);
     }
 }

@@ -54,15 +54,20 @@ public class PictureController {
     }
 
     @GetMapping("/paginate")
-    public PaginationResponse getPaginatedPicturesStartingFrom(
-            @RequestParam(required = false) String documentIdStartKey,
+    public PaginationResponse getPaginatedContentUrls(
+            @RequestParam(required = false) String documentIdKeyCursor,
             @RequestParam String placeId,
-            @RequestParam(defaultValue = "5") int querySize
+            @RequestParam(defaultValue = "5") int querySize,
+            @RequestParam(defaultValue = "false") boolean isRefresh
     ) {
-        if (documentIdStartKey == null) {
-            documentIdStartKey = "";
+        if (documentIdKeyCursor == null) {
+            documentIdKeyCursor = "";
         }
 
-        return pictureService.paginate(documentIdStartKey, placeId, querySize);
+        if (isRefresh) {
+            return pictureService.refreshPaginate(documentIdKeyCursor, placeId, querySize);
+        } else {
+            return pictureService.paginate(documentIdKeyCursor, placeId, querySize);
+        }
     }
 }
