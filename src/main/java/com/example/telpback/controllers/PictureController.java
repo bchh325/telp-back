@@ -1,11 +1,16 @@
 package com.example.telpback.controllers;
 
+import com.example.telpback.dto.PaginationResponse;
 import com.example.telpback.models.Picture;
 import com.example.telpback.models.Place;
 import com.example.telpback.services.PictureService;
+import com.google.cloud.firestore.DocumentSnapshot;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URL;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -49,7 +54,15 @@ public class PictureController {
     }
 
     @GetMapping("/paginate")
-    public Place[] getPaginatedPicturesStartingFrom(String startKey, int amount) {
-        return new Place[]{};
+    public PaginationResponse getPaginatedPicturesStartingFrom(
+            @RequestParam(required = false) String documentIdStartKey,
+            @RequestParam String placeId,
+            @RequestParam(defaultValue = "5") int querySize
+    ) {
+        if (documentIdStartKey == null) {
+            documentIdStartKey = "";
+        }
+
+        return pictureService.paginate(documentIdStartKey, placeId, querySize);
     }
 }

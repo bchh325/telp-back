@@ -17,7 +17,7 @@ public class PlaceController {
         Place placeDocument;
 
         try {
-            placeDocument = placeService.getSingleDocumentByName(id);
+            placeDocument = placeService.getSingleDocumentById(id).toObject(Place.class);
             System.out.println(placeDocument.toString());
             return placeDocument;
         } catch (Exception e) {

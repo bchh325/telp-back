@@ -35,14 +35,13 @@ public class BaseFirestoreService<T> {
         this.ref = ref;
     }
 
-    public T getSingleDocumentByName(String documentId) throws Exception {
+    public DocumentSnapshot getSingleDocumentById(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         DocumentSnapshot singleDocument = future.get();
 
         if (singleDocument.exists()) {
-            System.out.println(singleDocument.getData());
-            return singleDocument.toObject(this.type);
+            return singleDocument;
         } else {
             throw new DocumentNotFoundException("There was an error retrieving the selected document.");
         }

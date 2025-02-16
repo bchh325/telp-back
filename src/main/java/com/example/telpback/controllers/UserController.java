@@ -15,7 +15,7 @@ public class UserController {
         User userDocument;
 
         try {
-            userDocument = userService.getSingleDocumentByName(id);
+            userDocument = userService.getSingleDocumentById(id).toObject(User.class);
             System.out.println(userDocument.toString());
             return userDocument;
         } catch (Exception e) {
