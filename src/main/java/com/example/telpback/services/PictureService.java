@@ -48,7 +48,7 @@ public class PictureService {
 
     public PaginationResponse refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot newestDocumentInSnapshot = null;
-        String resourceOriginUrl = "http://35.244.209.96";
+        String resourceOriginUrl = "https://housetofusoup.com";
         List<URL> urls = new ArrayList<>();
 
         try {
@@ -75,7 +75,7 @@ public class PictureService {
     public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot oldestDocumentInSnapshot = null;
         DocumentSnapshot newestDocumentInSnapshot = null;
-        String resourceOriginUrl = "http://35.244.209.96";
+        String resourceOriginUrl = "https://housetofusoup.com";
         List<URL> urls = new ArrayList<>();
 
         try {
