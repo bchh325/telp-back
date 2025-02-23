@@ -11,11 +11,11 @@ public class UserController {
     @GetMapping("/users/{id}")
     @ResponseBody
     public User getSingleUserDocument(@PathVariable String id) {
-        UserService userService = new UserService("users");
+        UserService userService = new UserService();
         User userDocument;
 
         try {
-            userDocument = userService.getSingleDocumentByName(id);
+            userDocument = userService.getSingleDocumentById(id).toObject(User.class);
             System.out.println(userDocument.toString());
             return userDocument;
         } catch (Exception e) {
