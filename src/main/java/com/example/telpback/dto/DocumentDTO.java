@@ -1,6 +1,11 @@
-package com.example.telpback.generics;
+package com.example.telpback.dto;
 
-public class BaseDocumentUpdate<T> {
+public class DocumentDTO<T> {
+    public DocumentDTO(String documentId, T object) {
+        this.documentId = documentId;
+        this.object = object;
+    }
+
     private String documentId;
     private T object;
 

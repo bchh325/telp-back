@@ -1,34 +1,42 @@
 package com.example.telpback.models;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class User {
-
-    private List<Object> liked_places;
-    private List<Object> uploaded_pictures;
-    private List<Object> visited_places;
-
-    public List<Object> getLiked_places() {
-        return liked_places;
+    public User(String userId) {
+        this.userId = userId;
+        this.likedPlaces = new ArrayList<>();
+        this.uploadedPictures = new ArrayList<>();
+        this.visitedPlaces = new ArrayList<>();
     }
 
-    public void setLiked_places(List<Object> liked_places) {
-        this.liked_places = liked_places;
+    private String userId;
+
+    private ArrayList<String> likedPlaces;
+    private ArrayList<String> uploadedPictures;
+    private ArrayList<String> visitedPlaces;
+
+    public ArrayList<String> getLikedPlaces() {
+        return likedPlaces;
     }
 
-    public List<Object> getUploaded_pictures() {
-        return uploaded_pictures;
+    public void setLikedPlaces(ArrayList<String> likedPlaces) {
+        this.likedPlaces = likedPlaces;
     }
 
-    public void setUploaded_pictures(List<Object> uploaded_pictures) {
-        this.uploaded_pictures = uploaded_pictures;
+    public ArrayList<String> getUploadedPictures() {
+        return uploadedPictures;
     }
 
-    public List<Object> getVisited_places() {
-        return visited_places;
+    public void setUploadedPictures(ArrayList<String> uploadedPictures) {
+        this.uploadedPictures = uploadedPictures;
     }
 
-    public void setVisited_places(List<Object> visited_places) {
-        this.visited_places = visited_places;
+    public ArrayList<String> getVisitedPlaces() {
+        return visitedPlaces;
+    }
+
+    public void setVisitedPlaces(ArrayList<String> visitedPlaces) {
+        this.visitedPlaces = visitedPlaces;
     }
 }

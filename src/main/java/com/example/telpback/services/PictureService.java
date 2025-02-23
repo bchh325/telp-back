@@ -1,6 +1,7 @@
 package com.example.telpback.services;
 
-import com.example.telpback.dto.PaginationResponse;
+import com.example.telpback.dto.DocumentDTO;
+import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.generics.BaseUploadService;
 import com.example.telpback.models.Picture;
@@ -37,16 +38,18 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(String pictureUuid, MultipartFile file, Picture pictureObject) {
+    public void upload(DocumentDTO<Picture> document, MultipartFile file) {
+        String pictureUuid = document.getDocumentId();
+
        uploadService.uploadToBucket(pictureUuid, file);
-       firestoreService.setDocument(pictureUuid, pictureObject);
+       firestoreService.setDocument(pictureUuid, document);
     }
 
     public void getPicture() {
         uploadService.getPicture();
     }
 
-    public PaginationResponse refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
         List<URL> urls = new ArrayList<>();
@@ -70,9 +73,9 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, null, newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, null, newestDocumentInSnapshot.getId());
     }
-    public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO paginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot oldestDocumentInSnapshot = null;
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
@@ -99,7 +102,7 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
     }
 
     private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {

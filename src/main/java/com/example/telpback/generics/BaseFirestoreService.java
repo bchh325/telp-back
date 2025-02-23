@@ -1,5 +1,6 @@
 package com.example.telpback.generics;
 
+import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.exceptions.DocumentNotFoundException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -47,9 +48,10 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void setDocument(String documentId, T documentObject) {
+    public void setDocument(String documentId, Object document) {
         try {
-            ref.document(documentId).set(documentObject);
+
+            ref.document(documentId).set(document);
         } catch (Exception e) {
             System.out.println("Error setting document");
             System.out.println(e);
