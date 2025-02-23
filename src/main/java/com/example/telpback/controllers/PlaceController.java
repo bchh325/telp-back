@@ -13,7 +13,7 @@ public class PlaceController {
     @GetMapping("/places/{id}")
     @ResponseBody
     public Place getSinglePlaceDocument(@PathVariable String id) {
-        PlaceService placeService = new PlaceService();
+        PlaceService placeService = new PlaceService("places");
         Place placeDocument;
 
         try {

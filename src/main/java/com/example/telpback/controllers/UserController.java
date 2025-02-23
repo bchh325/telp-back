@@ -11,7 +11,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     @ResponseBody
     public User getSingleUserDocument(@PathVariable String id) {
-        UserService userService = new UserService();
+        UserService userService = new UserService("users");
         User userDocument;
 
         try {
