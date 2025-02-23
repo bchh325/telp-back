@@ -28,6 +28,7 @@ public class PictureController {
     @GetMapping("/{id}")
     @ResponseBody
     public Picture getSinglePictureDocument(@PathVariable String id) {
+        PictureService pictureService = new PictureService();
         Picture pictureDocument;
 
         try {

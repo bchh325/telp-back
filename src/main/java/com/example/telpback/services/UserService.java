@@ -4,7 +4,7 @@ import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.models.User;
 
 public class UserService extends BaseFirestoreService<User> {
-    public UserService(String collectionName) {
-        super(collectionName, User.class);
+    public UserService() {
+        super("users", User.class);
     }
 }
