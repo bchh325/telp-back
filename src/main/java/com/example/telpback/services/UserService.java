@@ -11,6 +11,14 @@ public class UserService extends BaseFirestoreService<UserDTO> {
     }
 
     public void setNewUser(UserDTO document) {
-        super.setDocument(document.getUserId(), document);
+        System.out.println("Document ID: " + document);
+        if (!super.documentExists(document.getUserId())) {
+            System.out.println(document);
+            super.setDocument(document.getUserId(), document);
+        }
+    }
+
+    public void updateUserFields(UserDTO document) {
+
     }
 }

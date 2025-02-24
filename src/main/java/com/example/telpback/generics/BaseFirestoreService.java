@@ -36,6 +36,18 @@ public class BaseFirestoreService<T> {
         this.ref = ref;
     }
 
+    public boolean documentExists(String documentId) {
+        DocumentReference docRef = this.ref.document(documentId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        try {
+            DocumentSnapshot snapshot = future.get();
+            return snapshot.exists();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+            return false;
+        }
+    }
+
     public DocumentSnapshot getSingleDocumentById(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -50,7 +62,6 @@ public class BaseFirestoreService<T> {
 
     public void setDocument(String documentId, Object document) {
         try {
-
             ref.document(documentId).set(document);
         } catch (Exception e) {
             System.out.println("Error setting document");
@@ -67,8 +78,7 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void updateDocument(T documentObject) {
-        System.out.println("Setting document");
-        //Requires more specific implementation
+    public void updateDocument(String documentId, Object documentObject) {
+
     }
 }

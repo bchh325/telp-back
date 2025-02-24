@@ -13,12 +13,17 @@ import java.util.ArrayList;
 public class UserController {
     UserService userService = new UserService();
 
-    @PostMapping("/set")
+    @PostMapping("/create")
     public void setNewUser(@RequestBody UserDTO user) {
         user.setLikedPlaces(new ArrayList<>());
         user.setUploadedPictures(new ArrayList<>());
         user.setVisitedPlaces(new ArrayList<>());
 
         userService.setNewUser(user);
+    }
+
+    @PostMapping("/update")
+    public void updateFields(@RequestBody UserDTO user) {
+
     }
 }
