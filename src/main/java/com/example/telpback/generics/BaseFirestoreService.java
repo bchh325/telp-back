@@ -11,10 +11,8 @@ import java.util.List;
 public class BaseFirestoreService<T> {
     private static Firestore db;
     private CollectionReference ref;
-    private final Class<T> type;
 
     public BaseFirestoreService(String collectionName, Class<T> type) {
-        this.type = type;
         if (db == null) {
             synchronized (BaseFirestoreService.class) {
                 if (db == null) {
@@ -60,9 +58,14 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void setDocument(String documentId, Object document) {
+    public void setDocument(DocumentDTO<T> document) {
         try {
-            ref.document(documentId).set(document);
+            String documentId = document.getDocumentId();
+            T fields = document.getObject();
+            System.out.println("Setting DocumentId " + documentId);
+            System.out.println("Body " + document);
+            System.out.println();
+            ref.document(documentId).set(fields);
         } catch (Exception e) {
             System.out.println("Error setting document");
             System.out.println(e);

@@ -1,9 +1,6 @@
 package com.example.telpback.controllers;
-import com.example.telpback.dto.DocumentDTO;
-import com.example.telpback.dto.UserDTO;
 import com.example.telpback.models.User;
 import com.example.telpback.services.UserService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,7 +11,7 @@ public class UserController {
     UserService userService = new UserService();
 
     @PostMapping("/create")
-    public void setNewUser(@RequestBody UserDTO user) {
+    public void setNewUser(@RequestBody User user) {
         user.setLikedPlaces(new ArrayList<>());
         user.setUploadedPictures(new ArrayList<>());
         user.setVisitedPlaces(new ArrayList<>());
@@ -23,7 +20,7 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public void updateFields(@RequestBody UserDTO user) {
+    public void updateFields(@RequestBody User user) {
 
     }
 }

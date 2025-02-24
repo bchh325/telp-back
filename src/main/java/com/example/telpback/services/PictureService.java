@@ -38,11 +38,11 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(DocumentDTO<Picture> document, MultipartFile file) {
-        String pictureUuid = document.getDocumentId();
+    public void upload(String documentId, Picture picture, MultipartFile file) {
+        DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
 
-       uploadService.uploadToBucket(pictureUuid, file);
-       firestoreService.setDocument(pictureUuid, document);
+       uploadService.uploadToBucket(documentId, file);
+       firestoreService.setDocument(document);
     }
 
     public void getPicture() {

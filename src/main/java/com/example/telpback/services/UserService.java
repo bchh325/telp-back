@@ -1,24 +1,23 @@
 package com.example.telpback.services;
 
 import com.example.telpback.dto.DocumentDTO;
-import com.example.telpback.dto.UserDTO;
 import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.models.User;
 
-public class UserService extends BaseFirestoreService<UserDTO> {
+public class UserService extends BaseFirestoreService<User> {
     public UserService() {
-        super("users", UserDTO.class);
+        super("users", User.class);
     }
 
-    public void setNewUser(UserDTO document) {
-        System.out.println("Document ID: " + document);
-        if (!super.documentExists(document.getUserId())) {
-            System.out.println(document);
-            super.setDocument(document.getUserId(), document);
+    public void setNewUser(User user) {
+        String userId = user.getUserId();
+        if (!super.documentExists(userId)) {
+            DocumentDTO<User> document = new DocumentDTO<>(userId, user);
+            super.setDocument(document);
         }
     }
 
-    public void updateUserFields(UserDTO document) {
+    public void updateUserFields(User userFields) {
 
     }
 }

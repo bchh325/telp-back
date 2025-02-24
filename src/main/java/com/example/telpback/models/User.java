@@ -1,5 +1,7 @@
 package com.example.telpback.models;
 
+import com.google.cloud.firestore.annotation.Exclude;
+
 import java.util.ArrayList;
 
 public class User {
@@ -38,5 +40,24 @@ public class User {
 
     public void setVisitedPlaces(ArrayList<String> visitedPlaces) {
         this.visitedPlaces = visitedPlaces;
+    }
+
+    @Exclude
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "userId='" + userId + '\'' +
+                ", likedPlaces=" + likedPlaces +
+                ", uploadedPictures=" + uploadedPictures +
+                ", visitedPlaces=" + visitedPlaces +
+                '}';
     }
 }

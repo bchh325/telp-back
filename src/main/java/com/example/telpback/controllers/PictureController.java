@@ -43,12 +43,10 @@ public class PictureController {
             @RequestParam("placeId") String placeId
     ) {
         String pictureUuid = UUID.randomUUID().toString();
-        Picture pictureObject = new Picture(placeId);
-
-        DocumentDTO<Picture> document = new DocumentDTO<>(pictureUuid, pictureObject);
+        Picture picture = new Picture(placeId);
 
         System.out.println("uploading picture");
-        pictureService.upload(document, file);
+        pictureService.upload(pictureUuid, picture, file);
     }
 
     @PostMapping("/upload/dev")
@@ -70,13 +68,12 @@ public class PictureController {
         }
 
         String pictureUuid = UUID.randomUUID().toString();
-        Picture pictureObject = new Picture(placeId);
+        Picture picture = new Picture(placeId);
 
-        DocumentDTO<Picture> document = new DocumentDTO<>(pictureUuid, pictureObject);
 
-        System.out.println("uploading picture");
         if (multipartFile != null) {
-            pictureService.upload(document, multipartFile);
+            System.out.println("uploading picture");
+            pictureService.upload(pictureUuid, picture, multipartFile);
         }
     }
 
