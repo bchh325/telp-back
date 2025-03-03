@@ -32,9 +32,9 @@ public class TelpBackApplicationTests {
     @Test
     void contextLoads() throws Exception {
 
-        assertThat(pictureController).isNot(null);
-        assertThat(userController).isNot(null);
-        assertThat(placeController).isNot(null);
+        assertThat(pictureController).isNotNull();
+        assertThat(userController).isNotNull();
+        assertThat(placeController).isNotNull();
 
     }
 }
