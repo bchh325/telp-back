@@ -5,6 +5,7 @@ import com.example.telpback.exceptions.DocumentNotFoundException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 

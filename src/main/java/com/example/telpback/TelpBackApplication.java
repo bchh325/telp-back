@@ -13,26 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import java.io.File;
 import java.io.FileInputStream;
 
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan
+@SpringBootApplication
 public class TelpBackApplication {
     public static void main(String[] args) {
-        try {
-            GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
-            System.out.println(credentials);
-            FirebaseOptions options = new FirebaseOptions.Builder()
-                    .setCredentials(credentials)
-                    .setProjectId("telp-445718")
-                    .build();
-
-            FirebaseApp.initializeApp(options);
-            String currentDir = System.getProperty("user.dir");
-            System.out.println("Current working directory: " + currentDir);
-        } catch (Exception e) {
-            System.out.println("Exception: " + e);
-        }
-
         SpringApplication.run(TelpBackApplication.class, args);
     }
 

@@ -17,12 +17,15 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/pictures")
 public class PictureController {
-    PictureService pictureService = new PictureService("pictures", "telp-photos");
+    private final PictureService pictureService;
+
+    public PictureController(PictureService pictureService) {
+        this.pictureService = pictureService;
+    }
 
     @GetMapping("/{id}")
     @ResponseBody
     public Picture getSinglePictureDocument(@PathVariable String id) {
-        PictureService pictureService = new PictureService("pictures", "telp-photos");
 
         Picture pictureDocument;
 

@@ -8,7 +8,11 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    UserService userService = new UserService();
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/create")
     public void setNewUser(@RequestBody User user) {
