@@ -12,6 +12,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void initialize() {
         try {
+            System.out.println("Initializing FirebaseApp");
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
             System.out.println(credentials);
             FirebaseOptions options = new FirebaseOptions.Builder()

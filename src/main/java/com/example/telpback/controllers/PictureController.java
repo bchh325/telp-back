@@ -4,6 +4,7 @@ import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class PictureController {
     private final PictureService pictureService;
 
+    @Autowired
     public PictureController(PictureService pictureService) {
         this.pictureService = pictureService;
     }
