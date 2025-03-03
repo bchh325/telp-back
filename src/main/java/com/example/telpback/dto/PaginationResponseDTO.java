@@ -3,14 +3,14 @@ package com.example.telpback.dto;
 import java.net.URL;
 import java.util.List;
 
-public class PaginationResponse {
+public class PaginationResponseDTO {
     private List<URL> urls;
     private String documentIdStartKey;
     private String documentIdRefreshKey;
 
-    public PaginationResponse() {}
+    public PaginationResponseDTO() {}
 
-    public PaginationResponse(List<URL> urls, String documentIdStartKey, String documentIdRefreshKey) {
+    public PaginationResponseDTO(List<URL> urls, String documentIdStartKey, String documentIdRefreshKey) {
         this.urls = urls;
         this.documentIdStartKey = documentIdStartKey;
         this.documentIdRefreshKey = documentIdRefreshKey;

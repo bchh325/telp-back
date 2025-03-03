@@ -33,4 +33,12 @@ public class Picture {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "Picture{" +
+                "placeId='" + placeId + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
