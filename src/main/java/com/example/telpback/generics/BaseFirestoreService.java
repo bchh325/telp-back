@@ -1,19 +1,19 @@
 package com.example.telpback.generics;
 
+import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.exceptions.DocumentNotFoundException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
+import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 
 public class BaseFirestoreService<T> {
     private static Firestore db;
     private CollectionReference ref;
-    private final Class<T> type;
 
     public BaseFirestoreService(String collectionName, Class<T> type) {
-        this.type = type;
         if (db == null) {
             synchronized (BaseFirestoreService.class) {
                 if (db == null) {
@@ -35,6 +35,18 @@ public class BaseFirestoreService<T> {
         this.ref = ref;
     }
 
+    public boolean documentExists(String documentId) {
+        DocumentReference docRef = this.ref.document(documentId);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        try {
+            DocumentSnapshot snapshot = future.get();
+            return snapshot.exists();
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+            return false;
+        }
+    }
+
     public DocumentSnapshot getSingleDocumentById(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -47,9 +59,14 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void setDocument(String documentId, T documentObject) {
+    public void setDocument(DocumentDTO<T> document) {
         try {
-            ref.document(documentId).set(documentObject);
+            String documentId = document.getDocumentId();
+            T fields = document.getObject();
+            System.out.println("Setting DocumentId " + documentId);
+            System.out.println("Body " + document);
+            System.out.println();
+            ref.document(documentId).set(fields);
         } catch (Exception e) {
             System.out.println("Error setting document");
             System.out.println(e);
@@ -65,8 +82,7 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void updateDocument(T documentObject) {
-        System.out.println("Setting document");
-        //Requires more specific implementation
+    public void updateDocument(String documentId, Object documentObject) {
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.telpback.services;
 
-import com.example.telpback.dto.PaginationResponse;
+import com.example.telpback.dto.DocumentDTO;
+import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.generics.BaseUploadService;
 import com.example.telpback.models.Picture;
@@ -9,22 +10,25 @@ import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QuerySnapshot;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class PictureService {
-    private BaseFirestoreService<Picture> firestoreService;
-    private BaseUploadService<Picture> uploadService;
-    public PictureService(String firestoreCollectionName, String cloudBucketName) {
-        firestoreService = new BaseFirestoreService<>(firestoreCollectionName, Picture.class);
-        uploadService = new BaseUploadService<>(cloudBucketName);
-    }
+    private final BaseFirestoreService<Picture> firestoreService;
+    private final BaseUploadService<Picture> uploadService;
 
-    public PictureService(String firestoreCollectionName) {
-        firestoreService = new BaseFirestoreService<>(firestoreCollectionName, Picture.class);
+    @Autowired
+    public PictureService(BaseFirestoreService<Picture> pictureBaseFirestoreService,
+                          BaseUploadService<Picture> pictureBaseUploadService) {
+        this.firestoreService = pictureBaseFirestoreService;
+        this.uploadService = pictureBaseUploadService;
     }
 
     public Picture getSingleDocumentByName(String documentId) {
@@ -37,16 +41,18 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(String pictureUuid, MultipartFile file, Picture pictureObject) {
-       uploadService.uploadToBucket(pictureUuid, file);
-       firestoreService.setDocument(pictureUuid, pictureObject);
+    public void upload(String documentId, Picture picture, MultipartFile file) {
+        DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
+
+       uploadService.uploadToBucket(documentId, file);
+       firestoreService.setDocument(document);
     }
 
     public void getPicture() {
         uploadService.getPicture();
     }
 
-    public PaginationResponse refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
         List<URL> urls = new ArrayList<>();
@@ -70,9 +76,9 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, null, newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, null, newestDocumentInSnapshot.getId());
     }
-    public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO paginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot oldestDocumentInSnapshot = null;
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
@@ -99,7 +105,7 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
     }
 
     private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {
