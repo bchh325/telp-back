@@ -16,28 +16,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserService extends BaseFirestoreService<User> {
-    public UserService() {
-        super("users", User.class);
+public class UserService {
+
+    private final BaseFirestoreService<User> firestoreService;
+    public UserService(BaseFirestoreService<User> userBaseFirestoreService) {
+        this.firestoreService = userBaseFirestoreService;
     }
 
     public ValidationResult createUser(User user) throws Exception {
         String userId = user.getUserId();
         String username = user.getUsername();
 
-        Query usernameExistsQuery = super.getRef().whereEqualTo("username", username);
+        Query usernameExistsQuery = firestoreService.getRef().whereEqualTo("username", username).limit(1);
 
-        boolean documentAlreadyExists = super.documentExists(userId);
+        boolean documentAlreadyExists = firestoreService.documentExists(userId);
         if (documentAlreadyExists) {
             return new ValidationResult(true, HttpStatus.CONFLICT, "Document with ID " + userId + " already exists as a resource.");
         }
 
-        boolean usernameAlreadyExists = !super.executeQuery(usernameExistsQuery).isEmpty();
+        boolean usernameAlreadyExists = !firestoreService.executeQuery(usernameExistsQuery).isEmpty();
         if (usernameAlreadyExists) {
             return new ValidationResult(true, HttpStatus.CONFLICT, "Document with username " + username + " already exists.");
         }
 
-        if (super.setDocument(new DocumentDTO<>(userId, user))) {
+        if (firestoreService.setDocument(new DocumentDTO<>(userId, user))) {
             return new ValidationResult(false, HttpStatus.CREATED, "User created successfully.");
         } else {
             return new ValidationResult(true, HttpStatus.INTERNAL_SERVER_ERROR, "Unable to create user. Internal server error.");
@@ -47,7 +49,7 @@ public class UserService extends BaseFirestoreService<User> {
     public ValidationResult updateUser(User user) throws Exception {
         String userId = user.getUserId();
 
-        if (super.updateDocument(new DocumentDTO<>(userId, user))) {
+        if (firestoreService.updateDocument(new DocumentDTO<>(userId, user))) {
             return new ValidationResult(false, HttpStatus.OK, "Successfully updated user document.");
         } else {
             return new ValidationResult(true, HttpStatus.INTERNAL_SERVER_ERROR, "Error updating document.");

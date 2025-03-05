@@ -3,6 +3,7 @@ package com.example.telpback.config;
 import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.generics.BaseUploadService;
 import com.example.telpback.models.Picture;
+import com.example.telpback.models.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,5 +19,8 @@ public class GenericsConfig {
     public BaseUploadService<Picture> pictureBaseUploadService() {
         return new BaseUploadService<>("telp-photos");
     }
+
+    @Bean
+    public BaseFirestoreService<User> userBaseFirestoreService() {return new BaseFirestoreService<>("users", User.class); }
 
 }

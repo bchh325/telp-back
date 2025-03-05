@@ -11,12 +11,5 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserServiceTests {
 
 
-    private final UserService userService = new UserService();
-
-    @Test
-    void testFunction() {
-        String testFunctionValue = userService.testFunction();
-    }
-
 
 }
