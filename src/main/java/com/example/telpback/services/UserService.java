@@ -27,13 +27,12 @@ public class UserService {
         String userId = user.getUserId();
         String username = user.getUsername();
 
-        Query usernameExistsQuery = firestoreService.getRef().whereEqualTo("username", username).limit(1);
-
         boolean documentAlreadyExists = firestoreService.documentExists(userId);
         if (documentAlreadyExists) {
             return new ValidationResult(true, HttpStatus.CONFLICT, "Document with ID " + userId + " already exists as a resource.");
         }
 
+        Query usernameExistsQuery = firestoreService.getRef().whereEqualTo("username", username).limit(1);
         boolean usernameAlreadyExists = !firestoreService.executeQuery(usernameExistsQuery).isEmpty();
         if (usernameAlreadyExists) {
             return new ValidationResult(true, HttpStatus.CONFLICT, "Document with username " + username + " already exists.");
@@ -55,6 +54,8 @@ public class UserService {
             return new ValidationResult(true, HttpStatus.INTERNAL_SERVER_ERROR, "Error updating document.");
         }
     }
+
+
 
     public String testFunction() {
         return "testFunction value";

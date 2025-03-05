@@ -67,9 +67,6 @@ public class BaseFirestoreService<T> {
         try {
             String documentId = document.getDocumentId();
             T fields = document.getObject();
-            System.out.println("Setting DocumentId " + documentId);
-            System.out.println("Body " + document);
-            System.out.println();
             ref.document(documentId).set(fields);
             return true;
         } catch (Exception e) {
