@@ -8,6 +8,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class BaseFirestoreService<T> {
     private static Firestore db;
@@ -35,15 +36,15 @@ public class BaseFirestoreService<T> {
         this.ref = ref;
     }
 
-    public boolean documentExists(String documentId) {
+    public boolean documentExists(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
         try {
             DocumentSnapshot snapshot = future.get();
             return snapshot.exists();
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
-            return false;
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 
@@ -59,7 +60,7 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void setDocument(DocumentDTO<T> document) {
+    public boolean setDocument(DocumentDTO<T> document) {
         try {
             String documentId = document.getDocumentId();
             T fields = document.getObject();
@@ -67,9 +68,11 @@ public class BaseFirestoreService<T> {
             System.out.println("Body " + document);
             System.out.println();
             ref.document(documentId).set(fields);
+            return true;
         } catch (Exception e) {
             System.out.println("Error setting document");
             System.out.println(e);
+            return false;
         }
     }
 
@@ -84,5 +87,15 @@ public class BaseFirestoreService<T> {
 
     public void updateDocument(String documentId, Object documentObject) {
 
+    }
+
+    public QuerySnapshot executeQuery(Query query) throws Exception{
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            return querySnapshot.get();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 }

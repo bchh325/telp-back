@@ -45,7 +45,11 @@ public class PictureService {
         DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
 
        uploadService.uploadToBucket(documentId, file);
-       firestoreService.setDocument(document);
+       try {
+           firestoreService.setDocument(document);
+       } catch (Exception e) {
+           System.out.println(e);
+       }
     }
 
     public void getPicture() {
@@ -86,9 +90,7 @@ public class PictureService {
 
         try {
             Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize, false);
-
-            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            QuerySnapshot snapshot = querySnapshot.get();
+            QuerySnapshot snapshot = firestoreService.executeQuery(query);
 
             oldestDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
             newestDocumentInSnapshot = snapshot.getDocuments().get(0);
