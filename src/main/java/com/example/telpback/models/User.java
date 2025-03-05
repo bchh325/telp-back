@@ -1,5 +1,7 @@
 package com.example.telpback.models;
 
+import com.example.telpback.interfaces.UserCreationConstraints;
+import com.example.telpback.interfaces.UserUpdateConstraints;
 import com.google.cloud.firestore.annotation.Exclude;
 import jakarta.validation.constraints.NotBlank;
 
@@ -12,13 +14,28 @@ public class User {
         this.visibility = visibility;
     }
 
-    public User() {
-        this.visibility = "public";
+    public User(String userId, String username) {
+        this.userId = userId;
+        this.username = username;
     }
 
-    @NotBlank(message = "UserID cannot be blank.")
+    public User(String userId) {
+        this.userId = userId;
+    }
+
+    public User() {}
+
+
+    @NotBlank(
+            message = "UserID cannot be blank.",
+            groups = {UserCreationConstraints.class, UserUpdateConstraints.class}
+    )
     private String userId;
-    @NotBlank(message = "Username cannot be blank.")
+
+    @NotBlank(
+            message = "Username cannot be blank",
+            groups = {UserCreationConstraints.class}
+    )
     private String username;
     private String visibility;
 

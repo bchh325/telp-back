@@ -3,6 +3,7 @@ package com.example.telpback.exceptions;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,5 +32,11 @@ public class GlobalControllerExceptionHandler {
         response.put("missingFields", missingFields);
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public void handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        System.out.println("MESSAGE NOT READABLE");
+        System.out.println(exception);
     }
 }

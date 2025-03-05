@@ -1,5 +1,7 @@
 package com.example.telpback.controllers;
 import com.example.telpback.dto.DocumentDTO;
+import com.example.telpback.interfaces.UserCreationConstraints;
+import com.example.telpback.interfaces.UserUpdateConstraints;
 import com.example.telpback.models.User;
 import com.example.telpback.models.ValidationResult;
 import com.example.telpback.services.UserService;
@@ -16,7 +18,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@Validated
 public class UserController {
     private final UserService userService;
 
@@ -25,7 +26,9 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> createNewUser(@RequestBody @Valid User user) {
+    public ResponseEntity<Map<String, Object>> createNewUser(
+            @Validated(UserCreationConstraints.class)
+            @RequestBody User user) {
         try {
             ValidationResult result = userService.createUser(user);
 
@@ -47,7 +50,27 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public void updateFields(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> updateFields(
+            @Validated(UserUpdateConstraints.class)
+            @RequestBody User user) {
 
+        try {
+            ValidationResult result = userService.updateUser(user);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("data", user);
+            response.put("message", result.getMessage());
+            response.put("error", result.isValid());
+
+            return new ResponseEntity<>(response, result.getStatus());
+        } catch (Exception e) {
+            System.out.println(e);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("message", "Error updating document.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

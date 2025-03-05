@@ -7,7 +7,10 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Bean;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class BaseFirestoreService<T> {
@@ -70,9 +73,8 @@ public class BaseFirestoreService<T> {
             ref.document(documentId).set(fields);
             return true;
         } catch (Exception e) {
-            System.out.println("Error setting document");
-            System.out.println(e);
-            return false;
+            System.out.println(e.getMessage());
+            throw e;
         }
     }
 
@@ -85,11 +87,39 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void updateDocument(String documentId, Object documentObject) {
+    public boolean updateDocument(DocumentDTO<T> document) throws Exception {
+        try {
+            String documentId = document.getDocumentId();
+            DocumentReference docRef = this.ref.document(documentId);
 
+            Map<String, Object> updateMap = new HashMap<>();
+
+            T updateObject = document.getObject();
+            for (Field field: updateObject.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+
+                String fieldName = field.getName();
+                Object fieldValue = field.get(updateObject);
+
+                boolean fieldExists = fieldValue != null;
+                if (fieldExists && (fieldValue != documentId)) {
+                    updateMap.put(fieldName, fieldValue);
+                }
+            }
+
+            if (!updateMap.isEmpty()) {
+                docRef.update(updateMap).get();
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            throw e;
+        }
     }
 
-    public QuerySnapshot executeQuery(Query query) throws Exception{
+    public QuerySnapshot executeQuery(Query query) throws Exception {
         try {
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
             return querySnapshot.get();

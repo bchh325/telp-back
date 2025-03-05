@@ -13,6 +13,8 @@ public class ValidationResult {
         this.status = status;
     }
 
+    public ValidationResult() {}
+
     public boolean isValid() {
         return error;
     }
