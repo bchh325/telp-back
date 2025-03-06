@@ -3,27 +3,27 @@ package com.example.telpback.models;
 import org.springframework.http.HttpStatus;
 
 public class ValidationResult {
-    private boolean error;
+    private boolean errorStatus;
     private String message;
-    private HttpStatus status;
+    private HttpStatus httpStatus;
 
-    public ValidationResult(boolean error, HttpStatus status, String message) {
-        this.error = error;
+    public ValidationResult(boolean errorStatus, HttpStatus status, String message) {
+        this.errorStatus = errorStatus;
         this.message = message;
-        this.status = status;
+        this.httpStatus = status;
     }
 
     public ValidationResult() {}
 
-    public boolean isValid() {
-        return error;
+    public boolean getErrorStatus() {
+        return errorStatus;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public HttpStatus getStatus() {
-        return status;
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 }

@@ -6,10 +6,7 @@ import com.example.telpback.generics.BaseFirestoreService;
 import com.example.telpback.generics.BaseUploadService;
 import com.example.telpback.models.Picture;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -90,13 +87,13 @@ public class PictureService {
 
         try {
             Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize, false);
-            QuerySnapshot snapshot = firestoreService.executeQuery(query);
+            List<QueryDocumentSnapshot> snapshots = firestoreService.executeQuery(query);
 
-            oldestDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
-            newestDocumentInSnapshot = snapshot.getDocuments().get(0);
+            oldestDocumentInSnapshot = snapshots.get(snapshots.size() - 1);
+            newestDocumentInSnapshot = snapshots.get(0);
 
 
-            for (DocumentSnapshot doc : snapshot) {
+            for (DocumentSnapshot doc : snapshots) {
                 URL constructuedUrl = new URL(resourceOriginUrl + "/" + doc.getId());
                 System.out.println(constructuedUrl);
                 urls.add(constructuedUrl);

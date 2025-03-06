@@ -35,10 +35,6 @@ public class BaseFirestoreService<T> {
         return ref;
     }
 
-    public void setRef(CollectionReference ref) {
-        this.ref = ref;
-    }
-
     public boolean documentExists(String documentId) throws Exception {
         DocumentReference docRef = this.ref.document(documentId);
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -75,12 +71,14 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public void addDocument(T documentObject) {
+    public boolean addDocument(T documentObject) {
         try {
             ref.add(documentObject);
+            return true;
         } catch (Exception e) {
             System.out.println("Error adding document");
             System.out.println(e);
+            return false;
         }
     }
 
@@ -116,12 +114,26 @@ public class BaseFirestoreService<T> {
         }
     }
 
-    public QuerySnapshot executeQuery(Query query) throws Exception {
+    public boolean deleteDocument(DocumentReference document) throws Exception {
         try {
-            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            return querySnapshot.get();
+            ApiFuture<WriteResult> writeResult = document.delete();
+            WriteResult result = writeResult.get();
+            System.out.println(result);
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            throw e;
+        }
+    }
+
+    public List<QueryDocumentSnapshot> executeQuery(Query query) throws Exception {
+        try {
+            ApiFuture<QuerySnapshot> querySnapshot = query.get();
+            List<QueryDocumentSnapshot> snapshots = querySnapshot.get().getDocuments();
+            //System.out.println(snapshot);
+            return  snapshots;
+        } catch (Exception e) {
+            System.out.println("Query Execution Error");
             throw e;
         }
     }

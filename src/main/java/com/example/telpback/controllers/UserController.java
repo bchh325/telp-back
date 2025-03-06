@@ -1,29 +1,25 @@
 package com.example.telpback.controllers;
-import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.interfaces.UserCreationConstraints;
 import com.example.telpback.interfaces.UserUpdateConstraints;
 import com.example.telpback.models.User;
 import com.example.telpback.models.ValidationResult;
 import com.example.telpback.services.UserService;
-import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService service) {
+        this.userService = service;
     }
+
+    private final UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createNewUser(
@@ -36,9 +32,9 @@ public class UserController {
 
             response.put("data", user);
             response.put("message", result.getMessage());
-            response.put("error", result.isValid());
+            response.put("error", result.getErrorStatus());
 
-            return new ResponseEntity<>(response, result.getStatus());
+            return new ResponseEntity<>(response, result.getHttpStatus());
         } catch (Exception e) {
             System.out.println(e);
 
@@ -61,9 +57,9 @@ public class UserController {
 
             response.put("data", user);
             response.put("message", result.getMessage());
-            response.put("error", result.isValid());
+            response.put("error", result.getErrorStatus());
 
-            return new ResponseEntity<>(response, result.getStatus());
+            return new ResponseEntity<>(response, result.getHttpStatus());
         } catch (Exception e) {
             System.out.println(e);
 

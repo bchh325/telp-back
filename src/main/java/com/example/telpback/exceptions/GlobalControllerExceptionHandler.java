@@ -1,6 +1,7 @@
 package com.example.telpback.exceptions;
 
 import jakarta.validation.ConstraintViolationException;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -35,8 +36,14 @@ public class GlobalControllerExceptionHandler {
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public void handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        System.out.println("MESSAGE NOT READABLE");
-        System.out.println(exception);
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("message", "Issue with request parameters.");
+        response.put("additionalInfo", exception.getLocalizedMessage());
+        System.out.println(exception.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
 }

@@ -18,12 +18,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/pictures")
 public class PictureController {
-    private final PictureService pictureService;
-
-    @Autowired
-    public PictureController(PictureService pictureService) {
-        this.pictureService = pictureService;
+    public PictureController(PictureService service) {
+        this.pictureService = service;
     }
+
+    private final PictureService pictureService;
 
     @GetMapping("/{id}")
     @ResponseBody
