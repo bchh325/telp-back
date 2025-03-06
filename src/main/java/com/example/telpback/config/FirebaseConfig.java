@@ -12,9 +12,7 @@ public class FirebaseConfig {
     @PostConstruct
     public void initialize() {
         try {
-            System.out.println("Initializing FirebaseApp");
             GoogleCredentials credentials = GoogleCredentials.getApplicationDefault();
-            System.out.println(credentials);
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(credentials)
                     .setProjectId("telp-445718")
@@ -22,7 +20,6 @@ public class FirebaseConfig {
 
             FirebaseApp.initializeApp(options);
             String currentDir = System.getProperty("user.dir");
-            System.out.println("Current working directory: " + currentDir);
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }
