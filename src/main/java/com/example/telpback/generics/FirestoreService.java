@@ -5,21 +5,19 @@ import com.example.telpback.exceptions.DocumentNotFoundException;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
-import org.springframework.context.annotation.Bean;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-public class BaseFirestoreService<T> {
+public class FirestoreService<T> {
     private static Firestore db;
     private CollectionReference ref;
 
-    public BaseFirestoreService(String collectionName, Class<T> type) {
+    public FirestoreService(String collectionName, Class<T> type) {
         if (db == null) {
-            synchronized (BaseFirestoreService.class) {
+            synchronized (FirestoreService.class) {
                 if (db == null) {
                     db = FirestoreClient.getFirestore();
                 }

@@ -1,4 +1,4 @@
-package com.example.telpback.interfaces;
+package com.example.telpback.validators;
 
 public interface UserCreationConstraints {
 }

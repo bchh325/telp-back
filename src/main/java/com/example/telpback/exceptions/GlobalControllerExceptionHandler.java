@@ -24,12 +24,26 @@ public class GlobalControllerExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         List<String> missingFields = new ArrayList<>();
 
+        response.put("message", "Object validation failed on request.");
+
+        //not proud of it but it works. i'm having some trouble figuring out how to differentiate validation errors
+        //because my custom validator throws the same error as other annotations like @NotBlank. whatever
+
+        if (exception.getMessage().contains("Both likedPlaces and visitedPlaces cannot exist.")) {
+            response.put("error", "Both likedPlaces and visitedPlaces cannot exist.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        if (exception.getMessage().contains("Both likedPlaces and visitedPlaces cannot be null.")) {
+            response.put("error", "Both likedPlaces and visitedPlaces cannot be null.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String field = ((FieldError) error).getField();
             missingFields.add(field);
         });
 
-        response.put("message", "Object validation failed on request.");
         response.put("missingFields", missingFields);
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -39,8 +53,19 @@ public class GlobalControllerExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
         Map<String, Object> response = new HashMap<>();
 
-        response.put("message", "Issue with request parameters.");
-        response.put("additionalInfo", exception.getLocalizedMessage());
+        response.put("message", "Issue with request. Check additionalInfo for a detailed error.");
+        response.put("additionalInfo", exception.getMessage());
+        System.out.println(exception.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException exception) {
+        Map<String, Object> response = new HashMap<>();
+
+        response.put("message", "attempting to handle constraint violation");
+
         System.out.println(exception.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

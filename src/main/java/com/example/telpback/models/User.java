@@ -1,11 +1,9 @@
 package com.example.telpback.models;
 
-import com.example.telpback.interfaces.UserCreationConstraints;
-import com.example.telpback.interfaces.UserUpdateConstraints;
+import com.example.telpback.validators.UserCreationConstraints;
+import com.example.telpback.validators.UserUpdateConstraints;
 import com.google.cloud.firestore.annotation.Exclude;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.ArrayList;
 
 public class User {
     public User(String userId, String username, String visibility) {

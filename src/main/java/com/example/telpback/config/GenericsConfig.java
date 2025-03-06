@@ -1,7 +1,8 @@
 package com.example.telpback.config;
 
-import com.example.telpback.generics.BaseFirestoreService;
-import com.example.telpback.generics.BaseUploadService;
+import com.example.telpback.generics.FirestoreService;
+import com.example.telpback.generics.UploadService;
+import com.example.telpback.models.Activity;
 import com.example.telpback.models.Follower;
 import com.example.telpback.models.Picture;
 import com.example.telpback.models.User;
@@ -12,16 +13,14 @@ import org.springframework.context.annotation.Configuration;
 public class GenericsConfig {
 
     @Bean
-    public BaseFirestoreService<Picture> pictureBaseFirestoreService() {
-        return new BaseFirestoreService<>("pictures", Picture.class);
-    }
+    public FirestoreService<Picture> pictureFirestoreService() { return new FirestoreService<>("pictures", Picture.class); }
     @Bean
-    public BaseUploadService<Picture> pictureBaseUploadService() {
-        return new BaseUploadService<>("telp-photos");
-    }
+    public UploadService<Picture> pictureUploadService() { return new UploadService<>("telp-photos"); }
     @Bean
-    public BaseFirestoreService<User> userBaseFirestoreService() {return new BaseFirestoreService<>("users", User.class); }
+    public FirestoreService<User> userFirestoreService() { return new FirestoreService<>("users", User.class); }
     @Bean
-    public BaseFirestoreService<Follower> followerBaseFirestoreService() {return new BaseFirestoreService<>("followers", Follower.class); }
+    public FirestoreService<Follower> followersFirestoreService() { return new FirestoreService<>("followers", Follower.class); }
+    @Bean
+    public FirestoreService<Activity> userlikesFirestoreService() { return new FirestoreService<>("userlikes", Activity.class); }
 
 }

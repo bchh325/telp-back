@@ -1,7 +1,7 @@
 package com.example.telpback.services;
 
 import com.example.telpback.dto.DocumentDTO;
-import com.example.telpback.generics.BaseFirestoreService;
+import com.example.telpback.generics.FirestoreService;
 import com.example.telpback.models.User;
 import com.example.telpback.models.ValidationResult;
 import com.google.cloud.firestore.Query;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private final BaseFirestoreService<User> userService;
+    private final FirestoreService<User> userService;
 
-    public UserService(BaseFirestoreService<User> userBaseFirestoreService) {
-        this.userService = userBaseFirestoreService;
+    public UserService(FirestoreService<User> userFirestoreService) {
+        this.userService = userFirestoreService;
     }
 
     public ValidationResult createUser(User user) throws Exception {
@@ -49,6 +49,8 @@ public class UserService {
             return new ValidationResult(true, HttpStatus.INTERNAL_SERVER_ERROR, "Error updating document.");
         }
     }
+
+
 
     public String testFunction() {
         return "testFunction value";

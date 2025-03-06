@@ -1,6 +1,6 @@
 package com.example.telpback.controllers;
-import com.example.telpback.interfaces.UserCreationConstraints;
-import com.example.telpback.interfaces.UserUpdateConstraints;
+import com.example.telpback.validators.UserCreationConstraints;
+import com.example.telpback.validators.UserUpdateConstraints;
 import com.example.telpback.models.User;
 import com.example.telpback.models.ValidationResult;
 import com.example.telpback.services.UserService;

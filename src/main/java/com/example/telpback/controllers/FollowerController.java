@@ -18,7 +18,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/followers")
 public class FollowerController {
-    public FollowerController (FollowerService service) { this.followerService = service; }
+    public FollowerController(FollowerService service) { this.followerService = service; }
 
     private final FollowerService followerService;
 

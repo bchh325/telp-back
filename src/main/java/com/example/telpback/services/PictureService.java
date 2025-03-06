@@ -2,13 +2,12 @@ package com.example.telpback.services;
 
 import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.dto.PaginationResponseDTO;
-import com.example.telpback.generics.BaseFirestoreService;
-import com.example.telpback.generics.BaseUploadService;
+import com.example.telpback.generics.FirestoreService;
+import com.example.telpback.generics.UploadService;
 import com.example.telpback.models.Picture;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,14 +17,14 @@ import java.util.List;
 
 @Service
 public class PictureService {
-    private final BaseFirestoreService<Picture> firestoreService;
-    private final BaseUploadService<Picture> uploadService;
+    private final FirestoreService<Picture> firestoreService;
+    private final UploadService<Picture> uploadService;
 
     @Autowired
-    public PictureService(BaseFirestoreService<Picture> pictureBaseFirestoreService,
-                          BaseUploadService<Picture> pictureBaseUploadService) {
-        this.firestoreService = pictureBaseFirestoreService;
-        this.uploadService = pictureBaseUploadService;
+    public PictureService(FirestoreService<Picture> pictureFirestoreService,
+                          UploadService<Picture> pictureUploadService) {
+        this.firestoreService = pictureFirestoreService;
+        this.uploadService = pictureUploadService;
     }
 
     public Picture getSingleDocumentByName(String documentId) {
