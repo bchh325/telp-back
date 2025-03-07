@@ -9,6 +9,9 @@ import com.example.telpback.models.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class GenericsConfig {
 
@@ -21,6 +24,8 @@ public class GenericsConfig {
     @Bean
     public FirestoreService<Follower> followersFirestoreService() { return new FirestoreService<>("followers", Follower.class); }
     @Bean
-    public FirestoreService<Activity> userlikesFirestoreService() { return new FirestoreService<>("userlikes", Activity.class); }
+    public FirestoreService<Map> userlikesFirestoreService() { return new FirestoreService<>("userlikes", Map.class); }
+    @Bean
+    public FirestoreService<Map> uservisitsFirestoreService() { return new FirestoreService<>("uservisits", Map.class); }
 
 }

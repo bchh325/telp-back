@@ -18,7 +18,7 @@ public class Activity {
 
     private String userId;
 
-    private ArrayList<LikedPlace> likedPlaces;
+    private Map<String, LikedPlace> likedPlaces;
     private ArrayList<VisitedPlace> visitedPlaces;
 
     public String getUserId() {
@@ -29,11 +29,11 @@ public class Activity {
         this.userId = userId;
     }
 
-    public ArrayList<LikedPlace> getLikedPlaces() {
+    public Map<String, LikedPlace> getLikedPlaces() {
         return likedPlaces;
     }
 
-    public void setLikedPlaces(ArrayList<LikedPlace> likedPlaces) {
+    public void setLikedPlaces(Map<String, LikedPlace> likedPlaces) {
         this.likedPlaces = likedPlaces;
     }
 
@@ -48,18 +48,8 @@ public class Activity {
     public static class LikedPlace {
         public LikedPlace() {}
 
-        private String placeId;
-
         @ServerTimestamp
         private Timestamp timestamp;
-
-        public String getPlaceId() {
-            return placeId;
-        }
-
-        public void setPlaceId(String placeId) {
-            this.placeId = placeId;
-        }
 
         public Timestamp getTimestamp() {
             return timestamp;
@@ -72,7 +62,6 @@ public class Activity {
         @Override
         public String toString() {
             return "LikedPlace{" +
-                    "placeId='" + placeId + '\'' +
                     ", timestamp=" + timestamp +
                     '}';
         }
@@ -81,17 +70,8 @@ public class Activity {
     public static class VisitedPlace {
         public VisitedPlace() {}
 
-        private String placeId;
         @ServerTimestamp
         private Timestamp timestamp;
-
-        public String getPlaceId() {
-            return placeId;
-        }
-
-        public void setPlaceId(String placeId) {
-            this.placeId = placeId;
-        }
 
         public Timestamp getTimestamp() {
             return timestamp;
@@ -104,7 +84,6 @@ public class Activity {
         @Override
         public String toString() {
             return "VisitedPlace{" +
-                    "placeId='" + placeId + '\'' +
                     ", timestamp=" + timestamp +
                     '}';
         }

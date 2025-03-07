@@ -3,6 +3,7 @@ package com.example.telpback.controllers;
 import com.example.telpback.models.Activity;
 import com.example.telpback.services.ActivityService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +29,26 @@ public class ActivityController {
 
         Map<String, Object> response = new HashMap<>();
 
-        System.out.println(activity);
+        boolean likedPlacesExists = activity.getLikedPlaces() != null;
+        boolean visitedPlacesExists = activity.getVisitedPlaces() != null;
 
-        response.put("message", "Successfully built activity.");
+        response.put("message", "Successfully deserialized activity");
+
+        try {
+            if (likedPlacesExists) {
+                activityService.addToLiked(activity);
+            } else if (visitedPlacesExists) {
+                activityService.addToVisits(activity);
+            }
+        } catch (Exception e) {
+
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error adding to list");
+
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
