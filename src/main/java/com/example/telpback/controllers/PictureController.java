@@ -1,34 +1,32 @@
 package com.example.telpback.controllers;
 
-import com.example.telpback.dto.PaginationResponse;
+import com.example.telpback.dto.DocumentDTO;
+import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.models.Picture;
-import com.example.telpback.models.Place;
 import com.example.telpback.services.PictureService;
-import com.google.cloud.firestore.DocumentSnapshot;
-import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/pictures")
 public class PictureController {
-    PictureService pictureService = new PictureService("pictures", "telp-photos");
+    public PictureController(PictureService service) {
+        this.pictureService = service;
+    }
+
+    private final PictureService pictureService;
 
     @GetMapping("/{id}")
     @ResponseBody
     public Picture getSinglePictureDocument(@PathVariable String id) {
-        PictureService pictureService = new PictureService("pictures", "telp-photos");
 
         Picture pictureDocument;
 
@@ -49,11 +47,10 @@ public class PictureController {
             @RequestParam("placeId") String placeId
     ) {
         String pictureUuid = UUID.randomUUID().toString();
-
-        Picture pictureObject = new Picture(placeId);
+        Picture picture = new Picture(placeId);
 
         System.out.println("uploading picture");
-        pictureService.upload(pictureUuid, file, pictureObject);
+        pictureService.upload(pictureUuid, picture, file);
     }
 
     @PostMapping("/upload/dev")
@@ -75,12 +72,12 @@ public class PictureController {
         }
 
         String pictureUuid = UUID.randomUUID().toString();
+        Picture picture = new Picture(placeId);
 
-        Picture pictureObject = new Picture(placeId);
 
-        System.out.println("uploading picture");
         if (multipartFile != null) {
-            pictureService.upload(pictureUuid, multipartFile, pictureObject);
+            System.out.println("uploading picture");
+            pictureService.upload(pictureUuid, picture, multipartFile);
         }
     }
 
@@ -91,7 +88,7 @@ public class PictureController {
     }
 
     @GetMapping("/paginate")
-    public PaginationResponse getPaginatedContentUrls(
+    public PaginationResponseDTO getPaginatedContentUrls(
             @RequestParam(required = false) String documentIdKeyCursor,
             @RequestParam String placeId,
             @RequestParam(defaultValue = "5") int querySize,

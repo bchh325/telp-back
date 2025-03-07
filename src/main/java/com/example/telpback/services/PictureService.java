@@ -1,30 +1,30 @@
 package com.example.telpback.services;
 
-import com.example.telpback.dto.PaginationResponse;
-import com.example.telpback.generics.BaseFirestoreService;
-import com.example.telpback.generics.BaseUploadService;
+import com.example.telpback.dto.DocumentDTO;
+import com.example.telpback.dto.PaginationResponseDTO;
+import com.example.telpback.generics.FirestoreService;
+import com.example.telpback.generics.UploadService;
 import com.example.telpback.models.Picture;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.CollectionReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class PictureService {
-    private BaseFirestoreService<Picture> firestoreService;
-    private BaseUploadService<Picture> uploadService;
-    public PictureService(String firestoreCollectionName, String cloudBucketName) {
-        firestoreService = new BaseFirestoreService<>(firestoreCollectionName, Picture.class);
-        uploadService = new BaseUploadService<>(cloudBucketName);
-    }
+    private final FirestoreService<Picture> firestoreService;
+    private final UploadService<Picture> uploadService;
 
-    public PictureService(String firestoreCollectionName) {
-        firestoreService = new BaseFirestoreService<>(firestoreCollectionName, Picture.class);
+    @Autowired
+    public PictureService(FirestoreService<Picture> pictureFirestoreService,
+                          UploadService<Picture> pictureUploadService) {
+        this.firestoreService = pictureFirestoreService;
+        this.uploadService = pictureUploadService;
     }
 
     public Picture getSingleDocumentByName(String documentId) {
@@ -37,16 +37,22 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(String pictureUuid, MultipartFile file, Picture pictureObject) {
-       uploadService.uploadToBucket(pictureUuid, file);
-       firestoreService.setDocument(pictureUuid, pictureObject);
+    public void upload(String documentId, Picture picture, MultipartFile file) {
+        DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
+
+       uploadService.uploadToBucket(documentId, file);
+       try {
+           firestoreService.setDocument(document);
+       } catch (Exception e) {
+           System.out.println(e);
+       }
     }
 
     public void getPicture() {
         uploadService.getPicture();
     }
 
-    public PaginationResponse refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO refreshPaginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
         List<URL> urls = new ArrayList<>();
@@ -70,9 +76,9 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, null, newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, null, newestDocumentInSnapshot.getId());
     }
-    public PaginationResponse paginate(String documentIdStartKey, String placeId, int querySize) {
+    public PaginationResponseDTO paginate(String documentIdStartKey, String placeId, int querySize) {
         DocumentSnapshot oldestDocumentInSnapshot = null;
         DocumentSnapshot newestDocumentInSnapshot = null;
         String resourceOriginUrl = "https://housetofusoup.com";
@@ -80,15 +86,13 @@ public class PictureService {
 
         try {
             Query query = buildPaginationQuery(documentIdStartKey, placeId, querySize, false);
+            List<QueryDocumentSnapshot> snapshots = firestoreService.executeQuery(query);
 
-            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            QuerySnapshot snapshot = querySnapshot.get();
-
-            oldestDocumentInSnapshot = snapshot.getDocuments().get(snapshot.size() - 1);
-            newestDocumentInSnapshot = snapshot.getDocuments().get(0);
+            oldestDocumentInSnapshot = snapshots.get(snapshots.size() - 1);
+            newestDocumentInSnapshot = snapshots.get(0);
 
 
-            for (DocumentSnapshot doc : snapshot) {
+            for (DocumentSnapshot doc : snapshots) {
                 URL constructuedUrl = new URL(resourceOriginUrl + "/" + doc.getId());
                 System.out.println(constructuedUrl);
                 urls.add(constructuedUrl);
@@ -99,7 +103,7 @@ public class PictureService {
         }
 
         System.out.println("end pagination");
-        return new PaginationResponse(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
+        return new PaginationResponseDTO(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
     }
 
     private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {

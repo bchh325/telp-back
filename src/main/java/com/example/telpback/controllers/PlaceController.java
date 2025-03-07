@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PlaceController {
+    public PlaceController(PlaceService placeService) {
+        this.placeService = placeService;
+    }
+
+    private final PlaceService placeService;
+
     @GetMapping("/places/{id}")
     @ResponseBody
     public Place getSinglePlaceDocument(@PathVariable String id) {
