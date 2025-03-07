@@ -38,7 +38,6 @@ public class ActivityService {
         }
 
         batchSet.commit();
-
         return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
     }
 
@@ -57,7 +56,6 @@ public class ActivityService {
         }
 
         batchSet.commit();
-
         return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
     }
 

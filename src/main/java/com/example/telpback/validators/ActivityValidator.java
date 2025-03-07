@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityValidator implements ConstraintValidator<ActivityConstraints, Activity> {
     @Override
@@ -26,15 +27,16 @@ public class ActivityValidator implements ConstraintValidator<ActivityConstraint
             return false;
         }
 
-        if (!likedPlacesExist && !visitedPlacesExist) {
-            constraintValidatorContext.disableDefaultConstraintViolation();
-            constraintValidatorContext
-                    .buildConstraintViolationWithTemplate("Both likedPlaces and visitedPlaces cannot be null.")
-                    .addConstraintViolation();
+        constraintValidatorContext.disableDefaultConstraintViolation();
+        constraintValidatorContext
+                .buildConstraintViolationWithTemplate("Provided list cannot be empty.")
+                .addConstraintViolation();
 
-            return false;
+        if (likedPlacesExist) {
+            return !activity.getLikedPlaces().isEmpty();
+        } else {
+            return !activity.getVisitedPlaces().isEmpty();
         }
 
-        return true;
     }
 }

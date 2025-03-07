@@ -39,6 +39,11 @@ public class GlobalControllerExceptionHandler {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
+        if (exception.getMessage().contains("Provided list cannot be empty.")) {
+            response.put("error", "Provided list cannot be empty.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         exception.getBindingResult().getAllErrors().forEach((error) -> {
             String field = ((FieldError) error).getField();
             missingFields.add(field);
