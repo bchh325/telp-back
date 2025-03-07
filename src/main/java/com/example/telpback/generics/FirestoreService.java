@@ -7,6 +7,7 @@ import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -124,7 +125,7 @@ public class FirestoreService<T> {
         }
     }
 
-    public List<QueryDocumentSnapshot> executeQuery(Query query) throws Exception {
+    public List<QueryDocumentSnapshot> executeQuery(Query query) {
         try {
             ApiFuture<QuerySnapshot> querySnapshot = query.get();
             List<QueryDocumentSnapshot> snapshots = querySnapshot.get().getDocuments();
@@ -132,7 +133,7 @@ public class FirestoreService<T> {
             return  snapshots;
         } catch (Exception e) {
             System.out.println("Query Execution Error");
-            throw e;
+            return Collections.emptyList();
         }
     }
 }

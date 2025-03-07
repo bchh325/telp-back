@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public class ActivityService {
-
     private final FirestoreService<ActivityDTO> userlikesFirestoreService;
     private final FirestoreService<ActivityDTO> uservisitsFirestoreService;
 
@@ -23,96 +22,116 @@ public class ActivityService {
         this.uservisitsFirestoreService = uservisitsFirestoreService;
     }
 
-    public ValidationResult addToLikes(Activity activity) throws Exception {
-        String userId = activity.getUserId();
-        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
 
-        WriteBatch batchSet = userlikesFirestoreService.getRef().getFirestore().batch();
-
-        for (Activity.LikedPlace current : likedPlaces) {
-            String placeId = current.getPlaceId();
-            ActivityDTO likedRelationship = new ActivityDTO(userId, placeId);
-            DocumentReference doc = userlikesFirestoreService.getRef().document();
-
-            batchSet.set(doc, likedRelationship);
-        }
-
-        batchSet.commit();
-        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
+    private interface BatchExecutor {
+        void execute();
     }
 
-    public ValidationResult addToVisits(Activity activity) throws Exception {
-        String userId = activity.getUserId();
-        List<Activity.VisitedPlace> visitedPlaces = activity.getVisitedPlaces();
-
-        WriteBatch batchSet = uservisitsFirestoreService.getRef().getFirestore().batch();
-
-        for (Activity.VisitedPlace current : visitedPlaces) {
-            String placeId = current.getPlaceId();
-            ActivityDTO visitedRelationship = new ActivityDTO(userId, placeId);
-            DocumentReference doc = uservisitsFirestoreService.getRef().document();
-
-            batchSet.set(doc, visitedRelationship);
+    private static class BatchSetDocuments<T extends Activity.ActivityMethods> implements BatchExecutor {
+        private BatchSetDocuments(FirestoreService<ActivityDTO> service, List<T> activityList, String userId) {
+            this.service = service;
+            this.activityList = activityList;
+            this.userId = userId;
         }
 
-        batchSet.commit();
-        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
+        private FirestoreService<ActivityDTO> service;
+        private List<T> activityList;
+        private String userId;
+
+        @Override
+        public void execute() {
+            WriteBatch batch = service.getRef().getFirestore().batch();
+
+            for (T current : activityList) {
+                String placeId = current.getPlaceId();
+                ActivityDTO likedRelationship = new ActivityDTO(userId, placeId);
+                DocumentReference doc = service.getRef().document();
+
+                batch.set(doc, likedRelationship);
+            }
+
+            batch.commit();
+        }
     }
 
-    public ValidationResult removeFromLikes(Activity activity) throws Exception {
-        String userId = activity.getUserId();
-        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
+    private static class BatchDeleteDocuments<T extends Activity.ActivityMethods> implements BatchExecutor {
+        private BatchDeleteDocuments(FirestoreService<ActivityDTO> service, List<T> activityList, String userId) {
+            this.service = service;
+            this.activityList = activityList;
+            this.userId = userId;
+        }
 
+        private FirestoreService<ActivityDTO> service;
+        private List<T> activityList;
+        private String userId;
 
-        WriteBatch batchDelete = userlikesFirestoreService.getRef().getFirestore().batch();
+        @Override
+        public void execute() {
+            WriteBatch batch = service.getRef().getFirestore().batch();
 
-        for (Activity.LikedPlace current : likedPlaces) {
-            String placeId = current.getPlaceId();
+            for (T current : activityList) {
+                String placeId = current.getPlaceId();
 
-            Query getRelationshipQuery = userlikesFirestoreService.getRef()
-                    .whereEqualTo("userId", userId)
-                    .whereEqualTo("placeId", placeId)
-                    .limit(1);
+                Query getRelationshipQuery = service.getRef()
+                        .whereEqualTo("userId", userId)
+                        .whereEqualTo("placeId", placeId)
+                        .limit(1);
 
-            List<QueryDocumentSnapshot> snapshots = userlikesFirestoreService.executeQuery(getRelationshipQuery);
+                List<QueryDocumentSnapshot> snapshots = service.executeQuery(getRelationshipQuery);
 
-            if (!snapshots.isEmpty()) {
-                for (DocumentSnapshot snapshot : snapshots) {
-                    DocumentReference docRef = snapshot.getReference();
-                    batchDelete.delete(docRef);
+                if (!snapshots.isEmpty()) {
+                    for (DocumentSnapshot snapshot : snapshots) {
+                        DocumentReference docRef = snapshot.getReference();
+                        batch.delete(docRef);
+                    }
                 }
             }
+            batch.commit();
         }
 
-        batchDelete.commit();
+    }
+
+    public ValidationResult addToLikes(Activity activity) {
+        String userId = activity.getUserId();
+        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
+
+        BatchExecutor batchSetDocuments = new BatchSetDocuments<>(
+                userlikesFirestoreService, likedPlaces, userId);
+        batchSetDocuments.execute();
+
+        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
+    }
+
+    public ValidationResult removeFromLikes(Activity activity) {
+        String userId = activity.getUserId();
+        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
+
+        BatchExecutor batchDeleteDocuments = new BatchDeleteDocuments<>(
+                userlikesFirestoreService, likedPlaces, userId);
+        batchDeleteDocuments.execute();
+
         return new ValidationResult(false, HttpStatus.NO_CONTENT, "Successfully deleted documents");
     }
 
-    public ValidationResult removeFromVisits(Activity activity) throws Exception {
+    public ValidationResult addToVisits(Activity activity) {
         String userId = activity.getUserId();
         List<Activity.VisitedPlace> visitedPlaces = activity.getVisitedPlaces();
 
-        WriteBatch batchDelete = uservisitsFirestoreService.getRef().getFirestore().batch();
+        BatchExecutor batchSetDocuments = new BatchSetDocuments<>(
+                uservisitsFirestoreService, visitedPlaces, userId);
+        batchSetDocuments.execute();
 
-        for (Activity.VisitedPlace current : visitedPlaces) {
-            String placeId = current.getPlaceId();
+        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
+    }
 
-            Query getRelationshipQuery = uservisitsFirestoreService.getRef()
-                    .whereEqualTo("userId", userId)
-                    .whereEqualTo("placeId", placeId)
-                    .limit(1);
+    public ValidationResult removeFromVisits(Activity activity) {
+        String userId = activity.getUserId();
+        List<Activity.VisitedPlace> visitedPlaces = activity.getVisitedPlaces();
 
-            List<QueryDocumentSnapshot> snapshots = uservisitsFirestoreService.executeQuery(getRelationshipQuery);
+        BatchExecutor batchDeleteDocuments = new BatchDeleteDocuments<>(
+                uservisitsFirestoreService, visitedPlaces, userId);
+        batchDeleteDocuments.execute();
 
-            if (!snapshots.isEmpty()) {
-                for (DocumentSnapshot snapshot : snapshots) {
-                    DocumentReference docRef = snapshot.getReference();
-                    batchDelete.delete(docRef);
-                }
-            }
-        }
-
-        batchDelete.commit();
         return new ValidationResult(false, HttpStatus.NO_CONTENT, "Successfully deleted documents");
     }
 

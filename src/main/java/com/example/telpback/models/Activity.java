@@ -10,6 +10,9 @@ import java.util.List;
 
 @ActivityConstraints
 public class Activity {
+    public interface ActivityMethods {
+        String getPlaceId();
+    }
 
     public Activity() {}
 
@@ -43,7 +46,8 @@ public class Activity {
         this.visitedPlaces = visitedPlaces;
     }
 
-    public static class LikedPlace {
+    public static class LikedPlace implements ActivityMethods {
+
         public LikedPlace() {}
 
         @NotNull
@@ -52,6 +56,7 @@ public class Activity {
         @ServerTimestamp
         private Timestamp timestamp;
 
+        @Override
         public String getPlaceId() {
             return placeId;
         }
@@ -69,7 +74,7 @@ public class Activity {
         }
     }
 
-    public static class VisitedPlace {
+    public static class VisitedPlace implements ActivityMethods {
         public VisitedPlace() {}
 
         @NotNull
@@ -78,6 +83,7 @@ public class Activity {
         @ServerTimestamp
         private Timestamp timestamp;
 
+        @Override
         public String getPlaceId() {
             return placeId;
         }
