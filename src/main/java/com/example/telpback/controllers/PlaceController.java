@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class PlaceController {
-
-    private final PlaceService placeService;
-
     public PlaceController(PlaceService placeService) {
         this.placeService = placeService;
     }
+
+    private final PlaceService placeService;
 
     @GetMapping("/places/{id}")
     @ResponseBody

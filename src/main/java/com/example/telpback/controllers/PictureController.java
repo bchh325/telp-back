@@ -4,6 +4,7 @@ import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
@@ -17,11 +18,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/pictures")
 public class PictureController {
-    private final PictureService pictureService;
-
-    public PictureController(PictureService pictureService) {
-        this.pictureService = pictureService;
+    public PictureController(PictureService service) {
+        this.pictureService = service;
     }
+
+    private final PictureService pictureService;
 
     @GetMapping("/{id}")
     @ResponseBody

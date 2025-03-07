@@ -6,17 +6,15 @@ import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.desktop.SystemSleepEvent;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
-public class BaseUploadService<T> {
+public class UploadService<T> {
     private static Storage storage;
     private BlobId blobId;
     private final String bucketName;
 
-    public BaseUploadService(String bucketName) {
+    public UploadService(String bucketName) {
         this.bucketName = bucketName;
 
         storage = StorageOptions.getDefaultInstance().getService();

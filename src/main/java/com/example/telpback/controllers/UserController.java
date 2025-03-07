@@ -1,30 +1,72 @@
 package com.example.telpback.controllers;
+import com.example.telpback.validators.UserCreationConstraints;
+import com.example.telpback.validators.UserUpdateConstraints;
 import com.example.telpback.models.User;
+import com.example.telpback.models.ValidationResult;
 import com.example.telpback.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserService service) {
+        this.userService = service;
     }
 
-    @PostMapping("/create")
-    public void setNewUser(@RequestBody User user) {
-        user.setLikedPlaces(new ArrayList<>());
-        user.setUploadedPictures(new ArrayList<>());
-        user.setVisitedPlaces(new ArrayList<>());
+    private final UserService userService;
 
-        userService.setNewUser(user);
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> createNewUser(
+            @Validated(UserCreationConstraints.class)
+            @RequestBody User user) {
+        try {
+            ValidationResult result = userService.createUser(user);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("data", user);
+            response.put("message", result.getMessage());
+            response.put("error", result.getErrorStatus());
+
+            return new ResponseEntity<>(response, result.getHttpStatus());
+        } catch (Exception e) {
+            System.out.println(e);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PostMapping("/update")
-    public void updateFields(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> updateFields(
+            @Validated(UserUpdateConstraints.class)
+            @RequestBody User user) {
 
+        try {
+            ValidationResult result = userService.updateUser(user);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("data", user);
+            response.put("message", result.getMessage());
+            response.put("error", result.getErrorStatus());
+
+            return new ResponseEntity<>(response, result.getHttpStatus());
+        } catch (Exception e) {
+            System.out.println(e);
+
+            Map<String, Object> response = new HashMap<>();
+
+            response.put("message", "Error updating document.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -8,25 +8,19 @@ public class DocumentDTO<T> {
         this.object = object;
     }
 
-    private String documentId;
-    private T object;
+    private final String documentId;
+    private final T object;
 
     @Exclude
     public String getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
-    }
 
     public T getObject() {
         return object;
     }
 
-    public void setObject(T object) {
-        this.object = object;
-    }
 
     @Override
     public String toString() {
