@@ -1,15 +1,12 @@
 package com.example.telpback.models;
 
 import com.example.telpback.validators.ActivityConstraints;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 @ActivityConstraints
 public class Activity {
@@ -18,8 +15,9 @@ public class Activity {
 
     private String userId;
 
-    private Map<String, LikedPlace> likedPlaces;
-    private ArrayList<VisitedPlace> visitedPlaces;
+    @Valid
+    private List<LikedPlace> likedPlaces;
+    private List<VisitedPlace> visitedPlaces;
 
     public String getUserId() {
         return userId;
@@ -29,39 +27,43 @@ public class Activity {
         this.userId = userId;
     }
 
-    public Map<String, LikedPlace> getLikedPlaces() {
+    public List<LikedPlace> getLikedPlaces() {
         return likedPlaces;
     }
 
-    public void setLikedPlaces(Map<String, LikedPlace> likedPlaces) {
+    public void setLikedPlaces(List<LikedPlace> likedPlaces) {
         this.likedPlaces = likedPlaces;
     }
 
-    public ArrayList<VisitedPlace> getVisitedPlaces() {
+    public List<VisitedPlace> getVisitedPlaces() {
         return visitedPlaces;
     }
 
-    public void setVisitedPlaces(ArrayList<VisitedPlace> visitedPlaces) {
+    public void setVisitedPlaces(List<VisitedPlace> visitedPlaces) {
         this.visitedPlaces = visitedPlaces;
     }
 
     public static class LikedPlace {
         public LikedPlace() {}
 
+        @NotNull
+        private String placeId;
+
         @ServerTimestamp
         private Timestamp timestamp;
 
-        public Timestamp getTimestamp() {
-            return timestamp;
+        public String getPlaceId() {
+            return placeId;
         }
 
-        public void setTimestamp(Timestamp timestamp) {
-            this.timestamp = timestamp;
+        public void setPlaceId(String placeId) {
+            this.placeId = placeId;
         }
 
         @Override
         public String toString() {
             return "LikedPlace{" +
+                    "placeId='" + placeId + '\'' +
                     ", timestamp=" + timestamp +
                     '}';
         }
@@ -70,20 +72,24 @@ public class Activity {
     public static class VisitedPlace {
         public VisitedPlace() {}
 
+        @NotNull
+        private String placeId;
+
         @ServerTimestamp
         private Timestamp timestamp;
 
-        public Timestamp getTimestamp() {
-            return timestamp;
+        public String getPlaceId() {
+            return placeId;
         }
 
-        public void setTimestamp(Timestamp timestamp) {
-            this.timestamp = timestamp;
+        public void setPlaceId(String placeId) {
+            this.placeId = placeId;
         }
 
         @Override
         public String toString() {
             return "VisitedPlace{" +
+                    "placeId='" + placeId + '\'' +
                     ", timestamp=" + timestamp +
                     '}';
         }

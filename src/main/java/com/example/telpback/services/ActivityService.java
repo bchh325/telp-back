@@ -1,110 +1,121 @@
 package com.example.telpback.services;
 
+import com.example.telpback.dto.ActivityDTO;
 import com.example.telpback.generics.FirestoreService;
 import com.example.telpback.models.Activity;
 import com.example.telpback.models.ValidationResult;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.SetOptions;
-import jakarta.validation.Valid;
+import com.google.cloud.firestore.*;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.accessibility.AccessibleIcon;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class ActivityService {
 
-    private final FirestoreService<Map> userlikesFirestoreService;
-    private final FirestoreService<Map> uservisitsFirestoreService;
+    private final FirestoreService<ActivityDTO> userlikesFirestoreService;
+    private final FirestoreService<ActivityDTO> uservisitsFirestoreService;
 
-    public ActivityService(FirestoreService<Map> userlikesFirestoreService,
-                           FirestoreService<Map> uservisitsFirestoreService) {
+    public ActivityService(FirestoreService<ActivityDTO> userlikesFirestoreService,
+                           FirestoreService<ActivityDTO> uservisitsFirestoreService) {
         this.userlikesFirestoreService = userlikesFirestoreService;
         this.uservisitsFirestoreService = uservisitsFirestoreService;
     }
 
-    public ValidationResult addToLiked(Activity activity) throws Exception {
+    public ValidationResult addToLikes(Activity activity) throws Exception {
         String userId = activity.getUserId();
+        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
 
-        Query userDocumentExistsQuery = userlikesFirestoreService
-                .getRef()
-                .whereEqualTo("userId", userId);
+        WriteBatch batchSet = userlikesFirestoreService.getRef().getFirestore().batch();
 
-        boolean userDocumentExists = !userlikesFirestoreService.executeQuery(userDocumentExistsQuery).isEmpty();
+        for (Activity.LikedPlace current : likedPlaces) {
+            String placeId = current.getPlaceId();
+            ActivityDTO likedRelationship = new ActivityDTO(userId, placeId);
+            DocumentReference doc = userlikesFirestoreService.getRef().document();
 
-        if (userDocumentExists){
-            System.out.println("Found Document");
-            DocumentSnapshot userDocument = userlikesFirestoreService.executeQuery(userDocumentExistsQuery).get(0);
-            String documentId = userDocument.getId();
-
-            System.out.println(documentId);
-            DocumentReference docRef = userlikesFirestoreService.getRef().document(documentId);
-
-
-            Map<String, Object> updateMap = new HashMap<>();
-            Map<String, Object> testNested = new HashMap<>();
-
-            testNested.put("testNest", "nesting");
-            updateMap.put("likedPlaces." + "testingPlaceId", testNested);
-
-            docRef.set(updateMap, SetOptions.mergeFields("likedPlaces"));
-
-        } else {
-            Map <String, Object> addMap = new HashMap<>();
-
-            System.out.println("attempting to add activity");
-            System.out.println(activity);
-
-            addMap.put("userId", userId);
-            addMap.put("likedPlaces", activity.getLikedPlaces());
-
-            userlikesFirestoreService.addDocument(addMap);
+            batchSet.set(doc, likedRelationship);
         }
 
+        batchSet.commit();
 
-        return new ValidationResult();
+        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
     }
 
-    public ValidationResult addToVisits(Activity activity) throws Exception{
+    public ValidationResult addToVisits(Activity activity) throws Exception {
         String userId = activity.getUserId();
+        List<Activity.VisitedPlace> visitedPlaces = activity.getVisitedPlaces();
 
-        Query userDocumentExistsQuery = uservisitsFirestoreService
-                .getRef()
-                .whereEqualTo("userId", userId);
+        WriteBatch batchSet = uservisitsFirestoreService.getRef().getFirestore().batch();
 
-        boolean userDocumentExists = !uservisitsFirestoreService.executeQuery(userDocumentExistsQuery).isEmpty();
+        for (Activity.VisitedPlace current : visitedPlaces) {
+            String placeId = current.getPlaceId();
+            ActivityDTO visitedRelationship = new ActivityDTO(userId, placeId);
+            DocumentReference doc = uservisitsFirestoreService.getRef().document();
 
-        if (userDocumentExists){
-            System.out.println("Found Document");
-            DocumentSnapshot userDocument = uservisitsFirestoreService.executeQuery(userDocumentExistsQuery).get(0);
-            String documentId = userDocument.getId();
-
-            System.out.println(documentId);
-
-            DocumentReference docRef = uservisitsFirestoreService.getRef().document(documentId);
-
-            Map<String, Object> updateMap = new HashMap<>();
-            updateMap.put("likedPlaces", activity.getLikedPlaces());
-
-            docRef.set(updateMap);
-
-        } else {
-            Map <String, Object> addMap = new HashMap<>();
-
-            System.out.println("attempting to add activity");
-            System.out.println(activity);
-
-            addMap.put("userId", userId);
-            addMap.put("likedPlaces", activity.getLikedPlaces());
-
-            uservisitsFirestoreService.addDocument(addMap);
+            batchSet.set(doc, visitedRelationship);
         }
 
+        batchSet.commit();
 
-        return new ValidationResult();
+        return new ValidationResult(false, HttpStatus.CREATED, "batch set successful.");
+    }
+
+    public ValidationResult removeFromLikes(Activity activity) throws Exception {
+        String userId = activity.getUserId();
+        List<Activity.LikedPlace> likedPlaces = activity.getLikedPlaces();
+
+
+        WriteBatch batchDelete = userlikesFirestoreService.getRef().getFirestore().batch();
+
+        for (Activity.LikedPlace current : likedPlaces) {
+            String placeId = current.getPlaceId();
+
+            Query getRelationshipQuery = userlikesFirestoreService.getRef()
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("placeId", placeId)
+                    .limit(1);
+
+            List<QueryDocumentSnapshot> snapshots = userlikesFirestoreService.executeQuery(getRelationshipQuery);
+
+            if (!snapshots.isEmpty()) {
+                for (DocumentSnapshot snapshot : snapshots) {
+                    DocumentReference docRef = snapshot.getReference();
+                    batchDelete.delete(docRef);
+                }
+            }
+        }
+
+        batchDelete.commit();
+        return new ValidationResult(false, HttpStatus.NO_CONTENT, "Successfully deleted documents");
+    }
+
+    public ValidationResult removeFromVisits(Activity activity) throws Exception {
+        String userId = activity.getUserId();
+        List<Activity.VisitedPlace> visitedPlaces = activity.getVisitedPlaces();
+
+        WriteBatch batchDelete = uservisitsFirestoreService.getRef().getFirestore().batch();
+
+        for (Activity.VisitedPlace current : visitedPlaces) {
+            String placeId = current.getPlaceId();
+
+            Query getRelationshipQuery = uservisitsFirestoreService.getRef()
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("placeId", placeId)
+                    .limit(1);
+
+            List<QueryDocumentSnapshot> snapshots = uservisitsFirestoreService.executeQuery(getRelationshipQuery);
+
+            if (!snapshots.isEmpty()) {
+                for (DocumentSnapshot snapshot : snapshots) {
+                    DocumentReference docRef = snapshot.getReference();
+                    batchDelete.delete(docRef);
+                }
+            }
+        }
+
+        batchDelete.commit();
+        return new ValidationResult(false, HttpStatus.NO_CONTENT, "Successfully deleted documents");
     }
 
 }

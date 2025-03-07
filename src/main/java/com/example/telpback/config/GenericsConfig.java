@@ -1,5 +1,6 @@
 package com.example.telpback.config;
 
+import com.example.telpback.dto.ActivityDTO;
 import com.example.telpback.generics.FirestoreService;
 import com.example.telpback.generics.UploadService;
 import com.example.telpback.models.Activity;
@@ -24,8 +25,8 @@ public class GenericsConfig {
     @Bean
     public FirestoreService<Follower> followersFirestoreService() { return new FirestoreService<>("followers", Follower.class); }
     @Bean
-    public FirestoreService<Map> userlikesFirestoreService() { return new FirestoreService<>("userlikes", Map.class); }
+    public FirestoreService<ActivityDTO> userlikesFirestoreService() { return new FirestoreService<>("userlikes", ActivityDTO.class); }
     @Bean
-    public FirestoreService<Map> uservisitsFirestoreService() { return new FirestoreService<>("uservisits", Map.class); }
+    public FirestoreService<ActivityDTO> uservisitsFirestoreService() { return new FirestoreService<>("uservisits", ActivityDTO.class); }
 
 }
