@@ -2,6 +2,7 @@ package com.example.telpback.controllers;
 
 import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.dto.PaginationResponseDTO;
+import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,14 @@ public class PictureController {
 
         System.out.println("uploading picture");
         pictureService.upload(pictureUuid, picture, file);
+    }
+
+    @PostMapping("/scale")
+    public void scale(
+            @RequestPart PictureDTO pictureData,
+            @RequestPart MultipartFile file
+            ) {
+
     }
 
     @PostMapping("/upload/dev")

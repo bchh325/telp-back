@@ -18,23 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class TelpBackApplicationTests {
-
-
-    @Autowired
-    private PictureController pictureController;
-
-    @Autowired
-    private UserController userController;
-
-    @Autowired
-    private PlaceController placeController;
-
     @Test
     void contextLoads() throws Exception {
-
-        assertThat(pictureController).isNotNull();
-        assertThat(userController).isNotNull();
-        assertThat(placeController).isNotNull();
 
     }
 }

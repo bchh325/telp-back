@@ -7,10 +7,13 @@ import com.example.telpback.generics.UploadService;
 import com.example.telpback.models.Picture;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +107,21 @@ public class PictureService {
 
         System.out.println("end pagination");
         return new PaginationResponseDTO(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
+    }
+
+    public BufferedImage resize(MultipartFile file) throws Exception {
+        BufferedImage image = ImageIO.read(file.getInputStream());
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        if (width < height) {
+            return Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, 400);
+        } else if (height < width) {
+            return Scalr.resize(image, Scalr.Mode.FIT_TO_HEIGHT, 400);
+        } else {
+            return Scalr.resize(image, Scalr.Method.AUTOMATIC, 400);
+        }
     }
 
     private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {
