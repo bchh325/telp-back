@@ -43,7 +43,6 @@ public class PictureServiceTests {
         BufferedImage urlImage = ImageIO.read(url);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write( urlImage, "jpg", baos );
-        baos.close();
 
         MockMultipartFile mockFile = new MockMultipartFile("name", baos.toByteArray());
 

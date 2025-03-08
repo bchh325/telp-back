@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 public class UploadService<T> {
     private static Storage storage;
-    private BlobId blobId;
     private final String bucketName;
 
     public UploadService(String bucketName) {
@@ -21,7 +20,7 @@ public class UploadService<T> {
     }
 
     public void uploadToBucket(String uniqueObjectId, MultipartFile file) {
-        blobId = BlobId.of(this.bucketName, uniqueObjectId);
+        BlobId blobId = BlobId.of(this.bucketName, uniqueObjectId);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setContentType("image/jpeg")
                 .build();
