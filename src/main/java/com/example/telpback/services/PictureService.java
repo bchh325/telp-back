@@ -43,7 +43,7 @@ public class PictureService {
     public void upload(String documentId, Picture picture, MultipartFile file) {
         DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
 
-       uploadService.uploadToBucket(documentId, file);
+       uploadService.uploadToBucket(new Picture(), file);
        try {
            firestoreService.setDocument(document);
        } catch (Exception e) {
@@ -109,20 +109,7 @@ public class PictureService {
         return new PaginationResponseDTO(urls, oldestDocumentInSnapshot.getId(), newestDocumentInSnapshot.getId());
     }
 
-    public BufferedImage resize(MultipartFile file) throws Exception {
-        BufferedImage image = ImageIO.read(file.getInputStream());
 
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        if (width < height) {
-            return Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, 400);
-        } else if (height < width) {
-            return Scalr.resize(image, Scalr.Mode.FIT_TO_HEIGHT, 400);
-        } else {
-            return Scalr.resize(image, Scalr.Method.AUTOMATIC, 400);
-        }
-    }
 
     private Query buildPaginationQuery(String documentIdKeyCursor, String placeId, int querySize, boolean isRefresh) {
         CollectionReference collectionReference = this.firestoreService.getRef();

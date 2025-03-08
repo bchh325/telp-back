@@ -22,9 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PictureServiceTests {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    @Autowired
-    private PictureService pictureService;
-
     @BeforeEach
     void setup(TestInfo testInfo) {
         String displayName = testInfo.getDisplayName();
@@ -50,7 +47,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = pictureService.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 
@@ -74,7 +71,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = pictureService.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 
@@ -98,7 +95,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = pictureService.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 
