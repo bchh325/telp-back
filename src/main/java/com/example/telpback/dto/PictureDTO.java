@@ -1,16 +1,15 @@
 package com.example.telpback.dto;
 
+import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
 public class PictureDTO {
     public PictureDTO() {}
-
-    @ServerTimestamp
-    private Timestamp timestamp;
     private String userId;
     private String placeId;
     private String visibility;
+    private String pictureType;
 
     public String getUserId() {
         return userId;
@@ -36,12 +35,21 @@ public class PictureDTO {
         this.visibility = visibility;
     }
 
+    public String getPictureType() {
+        return pictureType;
+    }
+
+    public void setPictureType(String pictureType) {
+        this.pictureType = pictureType;
+    }
+
     @Override
     public String toString() {
         return "PictureDTO{" +
                 "userId='" + userId + '\'' +
                 ", placeId='" + placeId + '\'' +
                 ", visibility='" + visibility + '\'' +
+                ", pictureType='" + pictureType + '\'' +
                 '}';
     }
 }

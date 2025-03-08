@@ -48,7 +48,7 @@ public class PictureController {
             @RequestParam("placeId") String placeId
     ) {
         String pictureUuid = UUID.randomUUID().toString();
-        Picture picture = new Picture(placeId);
+        Picture picture = new Picture();
 
         System.out.println("uploading picture");
         pictureService.upload(pictureUuid, picture, file);
@@ -81,7 +81,7 @@ public class PictureController {
         }
 
         String pictureUuid = UUID.randomUUID().toString();
-        Picture picture = new Picture(placeId);
+        Picture picture = new Picture();
 
 
         if (multipartFile != null) {

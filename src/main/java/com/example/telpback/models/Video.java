@@ -1,32 +1,26 @@
 package com.example.telpback.models;
 
-import com.example.telpback.dto.MediaDTO;
-import com.example.telpback.dto.PictureDTO;
+import com.example.telpback.dto.VideoDTO;
 import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
-public class Picture implements Media {
-
+public class Video implements Media {
     private String uploadType;
     private String userId;
     private String placeId;
     private String visibility;
-    private String pictureType;
 
     @ServerTimestamp
     private Timestamp timestamp;
 
-    public Picture() {
+    public Video() {
     }
 
-    public Picture(PictureDTO metadata) {
+    public Video(VideoDTO metadata) {
         this.uploadType = "image";
         this.placeId = metadata.getPlaceId();
         this.userId = metadata.getUserId();
-        this.pictureType = metadata.getPictureType();
     }
 
     public String getUploadType() {
@@ -69,22 +63,18 @@ public class Picture implements Media {
         this.visibility = visibility;
     }
 
+    @Override
     public String getPictureType() {
-        return pictureType;
-    }
-
-    public void setPictureType(String pictureType) {
-        this.pictureType = pictureType;
+        return null;
     }
 
     @Override
     public String toString() {
-        return "Picture{" +
+        return "Video{" +
                 "uploadType='" + uploadType + '\'' +
                 ", userId='" + userId + '\'' +
                 ", placeId='" + placeId + '\'' +
                 ", visibility='" + visibility + '\'' +
-                ", pictureType='" + pictureType + '\'' +
                 ", timestamp=" + timestamp +
                 '}';
     }
