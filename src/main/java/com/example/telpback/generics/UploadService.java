@@ -3,10 +3,7 @@ package com.example.telpback.generics;
 import com.example.telpback.interfaces.Media;
 import com.example.telpback.services.PictureUtilities;
 import com.google.cloud.ByteArray;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,8 +49,11 @@ public class UploadService<T extends Media> {
                     .setContentType("image/jpeg")
                     .build();
 
-            storage.create(originalBlobInfo, originalImageBytes);
-            storage.create(thumbBlobInfo, thumbImageBytes);
+            storage.create(originalBlobInfo, originalImageBytes)
+                    .createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+
+            storage.create(thumbBlobInfo, thumbImageBytes)
+                    .createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));;
         }
     }
 
@@ -72,7 +72,8 @@ public class UploadService<T extends Media> {
                     .setContentType("image/jpeg")
                     .build();
 
-            storage.create(profileBlobInfo, profileImageBytes);
+            storage.create(profileBlobInfo, profileImageBytes)
+                    .createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
         }
     }
 
