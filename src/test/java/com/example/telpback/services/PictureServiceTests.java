@@ -47,7 +47,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile, 400);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 
@@ -71,7 +71,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile, 400);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 
@@ -95,7 +95,7 @@ public class PictureServiceTests {
         int initialWidth = image.getWidth();
         int initialHeight = image.getHeight();
 
-        BufferedImage resizedImage = PictureUtilities.resize(mockFile);
+        BufferedImage resizedImage = PictureUtilities.resize(mockFile, 400);
         int resizedWidth = resizedImage.getWidth();
         int resizedHeight = resizedImage.getHeight();
 

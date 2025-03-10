@@ -7,18 +7,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class PictureUtilities {
-    public static BufferedImage resize(MultipartFile file) throws Exception {
+    public static BufferedImage resize(MultipartFile file, int size) throws Exception {
         BufferedImage image = ImageIO.read(file.getInputStream());
 
         int width = image.getWidth();
         int height = image.getHeight();
 
         if (width < height) {
-            return Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, 400);
+            return Scalr.resize(image, Scalr.Mode.FIT_TO_WIDTH, size);
         } else if (height < width) {
-            return Scalr.resize(image, Scalr.Mode.FIT_TO_HEIGHT, 400);
+            return Scalr.resize(image, Scalr.Mode.FIT_TO_HEIGHT, size);
         } else {
-            return Scalr.resize(image, Scalr.Method.AUTOMATIC, 400);
+            return Scalr.resize(image, Scalr.Method.AUTOMATIC, size);
         }
     }
 }

@@ -5,8 +5,11 @@ import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
+import com.example.telpback.validators.PictureGeneralConstraints;
+import com.example.telpback.validators.PictureProfileConstraints;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mock.web.MockMultipartFile;
@@ -57,10 +60,28 @@ public class PictureController {
 
     @PostMapping("/upload/v2")
     public void uploadNew(
-            @Valid
+            @Validated(PictureGeneralConstraints.class)
             @RequestPart PictureDTO pictureData,
             @RequestPart MultipartFile file
             ) {
+
+        System.out.println(pictureData);
+        System.out.println(file);
+
+        try {
+            pictureService.upload(pictureData, file);
+        } catch (Exception e) {
+            System.out.println("Error uploading");
+        }
+
+    }
+
+    @PostMapping("/upload/v2/profile")
+    public void uploadNewProfile(
+            @Validated(PictureProfileConstraints.class)
+            @RequestPart PictureDTO pictureData,
+            @RequestPart MultipartFile file
+    ) {
 
         System.out.println(pictureData);
         System.out.println(file);

@@ -33,11 +33,11 @@ public class UploadService<T extends Media> {
 
         @Override
         public void upload(T mediaModel, MultipartFile file) throws Exception {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(PictureUtilities.resize(file), "jpg", baos);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(PictureUtilities.resize(file, 400), "jpg", outputStream);
 
             byte[] originalImageBytes = file.getBytes();
-            byte[] thumbImageBytes = baos.toByteArray();
+            byte[] thumbImageBytes = outputStream.toByteArray();
 
             BlobId originalBlobId = BlobId.of("telp-photos", mediaModel.getUuid());
             BlobId thumbBlobId = BlobId.of("telp-photos", mediaModel.getUuid().concat("-thumb"));
@@ -60,7 +60,19 @@ public class UploadService<T extends Media> {
     private class ProfileImageUploader extends Uploader {
         @Override
         public void upload(T mediaModel, MultipartFile file) throws Exception {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            ImageIO.write(PictureUtilities.resize(file, 512), "jpg", outputStream);
 
+            byte[] profileImageBytes = outputStream.toByteArray();
+
+            BlobId profileBlobId = BlobId.of("telp-photos", mediaModel.getUserId().concat("-profile"));
+            
+            BlobInfo profileBlobInfo = BlobInfo
+                    .newBuilder(profileBlobId)
+                    .setContentType("image/jpeg")
+                    .build();
+
+            storage.create(profileBlobInfo, profileImageBytes);
         }
     }
 
@@ -78,18 +90,13 @@ public class UploadService<T extends Media> {
         String uploadType = mediaModel.getUploadType();
         String pictureType = mediaModel.getPictureType();
 
-        boolean isVideoType = uploadType.equals("video");
-
-        boolean isGeneralPicture = uploadType.equals("image") && pictureType.equals("general");
-        boolean isProfilePicture = uploadType.equals("image") && pictureType.equals("profile");
-
-        if (isVideoType) {
+        if (uploadType.equals("video")) {
             System.out.println("Returning video uploader");
             return new VideoUploader();
-        } else if (isProfilePicture) {
+        } else if (pictureType.equals("general")) {
             System.out.println("Returning general image uploader");
             return new GeneralImageUploader();
-        } else if (isGeneralPicture) {
+        } else if (pictureType.equals("profile")) {
             System.out.println("Returning profile image uploader");
             return new ProfileImageUploader();
         }

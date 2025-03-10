@@ -1,6 +1,5 @@
 package com.example.telpback.models;
 
-import com.example.telpback.dto.MediaDTO;
 import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
@@ -28,12 +27,21 @@ public class Picture implements Media {
     }
 
     public Picture(PictureDTO metadata) {
-        this.uuid = UUID.randomUUID().toString();
+        if (metadata.getPictureType().equals("general")) {
+            this.uuid = UUID.randomUUID().toString();
+            this.placeId = metadata.getPlaceId();
+            this.userId = metadata.getUserId();
+            this.pictureType = metadata.getPictureType();
+            this.visibility = metadata.getVisibility();
+        }
+
+        if (metadata.getPictureType().equals("profile")) {
+            this.userId = metadata.getUserId();
+            this.pictureType = metadata.getPictureType();
+        }
+
         this.uploadType = "image";
-        this.placeId = metadata.getPlaceId();
-        this.userId = metadata.getUserId();
-        this.pictureType = metadata.getPictureType();
-        this.visibility = metadata.getVisibility();
+
     }
 
     public String getUuid() {

@@ -1,6 +1,8 @@
 package com.example.telpback.dto;
 
 import com.example.telpback.interfaces.Media;
+import com.example.telpback.validators.PictureGeneralConstraints;
+import com.example.telpback.validators.PictureProfileConstraints;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 import jakarta.validation.constraints.NotBlank;
@@ -8,13 +10,28 @@ import jakarta.validation.constraints.NotBlank;
 public class PictureDTO {
     public PictureDTO() {}
 
-    @NotBlank
+    @NotBlank(
+            message = "userId cannot be blank for pictures.",
+            groups = {PictureGeneralConstraints.class, PictureProfileConstraints.class}
+    )
     private String userId;
-    @NotBlank
+
+    @NotBlank(
+            message = "placeId cannot be blank for general pictures.",
+            groups = {PictureGeneralConstraints.class}
+    )
     private String placeId;
-    @NotBlank
+
+    @NotBlank(
+            message = "visibility cannot be blank for general pictures.",
+            groups = {PictureGeneralConstraints.class}
+    )
     private String visibility;
-    @NotBlank
+
+    @NotBlank(
+            message = "pictureType cannot be blank for pictures.",
+            groups = {PictureGeneralConstraints.class, PictureProfileConstraints.class}
+    )
     private String pictureType;
 
     public String getUserId() {
