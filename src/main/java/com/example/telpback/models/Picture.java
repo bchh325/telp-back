@@ -33,6 +33,7 @@ public class Picture implements Media {
         this.placeId = metadata.getPlaceId();
         this.userId = metadata.getUserId();
         this.pictureType = metadata.getPictureType();
+        this.visibility = metadata.getVisibility();
     }
 
     public String getUuid() {

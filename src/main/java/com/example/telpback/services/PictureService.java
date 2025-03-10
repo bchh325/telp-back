@@ -43,6 +43,8 @@ public class PictureService {
 
     public void upload(PictureDTO pictureDto, MultipartFile file) {
         Picture picture = new Picture(pictureDto);
+        DocumentDTO<Picture> document = new DocumentDTO<>(picture.getUuid(), picture);
+        firestoreService.setDocument(document);
         uploadService.uploadToBucket(picture, file);
     }
 
