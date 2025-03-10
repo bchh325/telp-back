@@ -19,7 +19,7 @@ public class GenericsConfig {
     @Bean
     public FirestoreService<Picture> pictureFirestoreService() { return new FirestoreService<>("pictures", Picture.class); }
     @Bean
-    public UploadService<Picture> pictureUploadService() { return new UploadService<>("telp-photos"); }
+    public UploadService<Picture> pictureUploadService() { return new UploadService<>(); }
     @Bean
     public FirestoreService<User> userFirestoreService() { return new FirestoreService<>("users", User.class); }
     @Bean

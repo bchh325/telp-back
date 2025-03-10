@@ -2,6 +2,7 @@ package com.example.telpback.services;
 
 import com.example.telpback.dto.DocumentDTO;
 import com.example.telpback.dto.PaginationResponseDTO;
+import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.generics.FirestoreService;
 import com.example.telpback.generics.UploadService;
 import com.example.telpback.models.Picture;
@@ -40,15 +41,9 @@ public class PictureService {
         return new Picture();
     }
 
-    public void upload(String documentId, Picture picture, MultipartFile file) {
-        DocumentDTO<Picture> document = new DocumentDTO<>(documentId, picture);
-
-       uploadService.uploadToBucket(new Picture(), file);
-       try {
-           firestoreService.setDocument(document);
-       } catch (Exception e) {
-           System.out.println(e);
-       }
+    public void upload(PictureDTO pictureDto, MultipartFile file) {
+        Picture picture = new Picture(pictureDto);
+        uploadService.uploadToBucket(picture, file);
     }
 
     public void getPicture() {

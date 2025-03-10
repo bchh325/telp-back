@@ -5,11 +5,16 @@ import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.FieldValue;
+import com.google.cloud.firestore.annotation.Exclude;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 public class Picture implements Media {
 
+    @Exclude
+    private String uuid;
     private String uploadType;
     private String userId;
     private String placeId;
@@ -23,10 +28,19 @@ public class Picture implements Media {
     }
 
     public Picture(PictureDTO metadata) {
+        this.uuid = UUID.randomUUID().toString();
         this.uploadType = "image";
         this.placeId = metadata.getPlaceId();
         this.userId = metadata.getUserId();
         this.pictureType = metadata.getPictureType();
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getUploadType() {

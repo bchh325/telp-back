@@ -3,12 +3,18 @@ package com.example.telpback.dto;
 import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
+import jakarta.validation.constraints.NotBlank;
 
 public class PictureDTO {
     public PictureDTO() {}
+
+    @NotBlank
     private String userId;
+    @NotBlank
     private String placeId;
+    @NotBlank
     private String visibility;
+    @NotBlank
     private String pictureType;
 
     public String getUserId() {

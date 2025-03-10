@@ -5,7 +5,11 @@ import com.example.telpback.interfaces.Media;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.annotation.ServerTimestamp;
 
+import java.util.UUID;
+
 public class Video implements Media {
+
+    private String uuid;
     private String uploadType;
     private String userId;
     private String placeId;
@@ -18,9 +22,19 @@ public class Video implements Media {
     }
 
     public Video(VideoDTO metadata) {
+        this.uuid = UUID.randomUUID().toString();
         this.uploadType = "image";
         this.placeId = metadata.getPlaceId();
         this.userId = metadata.getUserId();
+    }
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getUploadType() {

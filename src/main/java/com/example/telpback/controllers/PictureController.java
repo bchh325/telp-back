@@ -5,6 +5,7 @@ import com.example.telpback.dto.PaginationResponseDTO;
 import com.example.telpback.dto.PictureDTO;
 import com.example.telpback.models.Picture;
 import com.example.telpback.services.PictureService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,14 +52,24 @@ public class PictureController {
         Picture picture = new Picture();
 
         System.out.println("uploading picture");
-        pictureService.upload(pictureUuid, picture, file);
+       // pictureService.upload(pictureUuid, picture, file);
     }
 
-    @PostMapping("/scale")
-    public void scale(
+    @PostMapping("/upload/v2")
+    public void uploadNew(
+            @Valid
             @RequestPart PictureDTO pictureData,
             @RequestPart MultipartFile file
             ) {
+
+        System.out.println(pictureData);
+        System.out.println(file);
+
+        try {
+            pictureService.upload(pictureData, file);
+        } catch (Exception e) {
+            System.out.println("Error uploading");
+        }
 
     }
 
@@ -86,7 +97,7 @@ public class PictureController {
 
         if (multipartFile != null) {
             System.out.println("uploading picture");
-            pictureService.upload(pictureUuid, picture, multipartFile);
+           // pictureService.upload(pictureUuid, picture, multipartFile);
         }
     }
 
