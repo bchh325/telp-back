@@ -70,7 +70,9 @@ public class UploadService<T extends Media> {
             BlobInfo profileBlobInfo = BlobInfo
                     .newBuilder(profileBlobId)
                     .setContentType("image/jpeg")
+                    .setCacheControl("no-cache, max-age=0")
                     .build();
+
 
             storage.create(profileBlobInfo, profileImageBytes)
                     .createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
